@@ -1,7 +1,19 @@
 version: '3.4'
 
 services:
+  db:
+    image: dshatohin/mysql-nanoserver:latest
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 1
+      MYSQL_DATABASE: ReDev 
+      MYSQL_USER: behrad
+      MYSQL_PASSWORD: 1234
+
   resumerankingmaster:
+    depends_on:
+      - db
     image: resumerankingmaster
     build:
       context: .
