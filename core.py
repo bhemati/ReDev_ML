@@ -1,9 +1,9 @@
-import pythoncom
+# import pythoncom
 import glob
 import os
 import warnings
 import textract
-from win32com.client import Dispatch
+# from win32com.client import Dispatch
 import traceback
 import extractEntities as entity
 from gensim.summarization.summarizer import summarize
@@ -40,11 +40,12 @@ def getfilepath(loc):
     return temp
 
 def parse_docfile(file):
-    pythoncom.CoInitialize()
-    wordapp = Dispatch("Word.Application")
-    doc = wordapp.Documents.Open(os.getcwd()+"/"+file)
-    docText = doc.Content.Text
-    wordapp.Quit()
+    # pythoncom.CoInitialize()
+    # wordapp = Dispatch("Word.Application")
+    # doc = wordapp.Documents.Open(os.getcwd()+"/"+file)
+    # docText = doc.Content.Text
+    # wordapp.Quit()
+    docText = textract.process(os.getcwd()+"/"+file)
     return docText
     
 def res(jobfile,skillset,jd_exp):
@@ -88,7 +89,7 @@ def res(jobfile,skillset,jd_exp):
 
     
     print("####### PARSING ########")
-    pythoncom.CoInitialize()
+    # pythoncom.CoInitialize()
     
     for count,i in enumerate(LIST_OF_FILES):
        

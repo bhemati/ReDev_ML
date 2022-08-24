@@ -111,7 +111,9 @@ class ExtractExp:
                                                 print(e)
                             
                                     if years>0 and years < 30:
-                                        experience_df = experience_df.append({'Type': expType, 'Years': years, 'Months': 0, 'Location': pos},ignore_index=True)                                    
+                                        # experience_df = experience_df.append({'Type': expType, 'Years': years,
+                                        #  'Months': 0, 'Location': pos},ignore_index=True)
+                                        experience_df.loc[experience_df.shape[0]] = [expType, years, 0, pos]
                                                                                 
             if not experience_df.empty:
                 #experience_df = experience_df.sort_values(['Type', 'Years','Location'], ascending=[True, False, True])
