@@ -1,0 +1,42 @@
+{
+  "PhoneNo": "Behrad",
+  "Email": "behrad@gmail.com",
+  "Work": [
+    {
+      "company": "b",
+      "position": "d",
+      "startDate": "Your start date, in YYYY-MM-DD format",
+      "endDate": "Your end date, in YYY-MM-DD format (leave blank for a current position)",
+      "summary": "A one-sentence to one-paragraph summary of this employer or position",
+      "highlights": [
+        "Bullet-point list items that you would like to include along with (or instead of) a summary paragraph."
+      ]
+    },
+    {
+      "company": "b",
+      "position": "d",
+      "startDate": "Your start date, in YYYY-MM-DD format",
+      "endDate": "Your end date, in YYY-MM-DD format (leave blank for a current position)",
+      "summary": "A one-sentence to one-paragraph summary of this employer or position",
+      "highlights": [
+        "Bullet-point list items that you would like to include along with (or instead of) a summary paragraph."
+      ]
+    }
+  ],
+  "string": "Hello World",
+  "skills": [
+    {
+      "name": "A category of job skills (e.g. 'Programming Languages')",
+      "level": "",
+      "keywords": [
+        "Keywords under this category (e.g. 'Java', 'C++', etc)"
+      ]
+    }
+  ],
+  "languages": [
+    {
+      "language": "Language name",
+      "fluency": "Your language fluency"
+    }
+  ]
+}

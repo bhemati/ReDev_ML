@@ -6,8 +6,8 @@ def programmingScore(resume, jdTxt, progWords = None):
     fout.write("\\textbf{Programming Languages:} \\\\\n")
     
     if(progWords == None):
-        programming = ["assembly", "bash", " c " "c++", "c#", "coffeescript", "emacs lisp",
-         "go!", "groovy", "haskell", "java", "javascript", "matlab", "max MSP", "objective c", 
+        programming = ["android", "assembly", "bash", " c " "c++", "c#", "coffeescript", "emacs lisp",
+         "go!", "groovy", "haskell", "java", "javascript", "kotlin", "matlab", "max MSP", "objective c", 
          "perl", "php","html", "xml", "css", "processing", "python", "ruby", "sml", "swift", 
          "latex" "unity", "unix" "visual basic" "wolfram language", "xquery", "sql", "node.js", 
          "scala", "kdb", "jquery", "mongodb", "CMMI", "ISO", "finance", "Banking", "Finacle", "Oracle Flexcube", "Fiserv", 
