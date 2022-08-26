@@ -5,17 +5,17 @@ Created on Sat Dec 29 20:57:57 2018
 @author: saurabh.keshari
 """
 #python -m spacy download en_core_web_sm
-#mport spacy
+import spacy
 import re
 #from collections import Counter
-#import en_core_web_sm
+import en_core_web_sm
 
 
 #Function to extract names from the string using spacy
 def extract_name(resume):
    
    # Load English tokenizer, tagger, parser, NER and word vectors
-    nlp = en_core_web_sm.load()
+    # nlp = en_core_web_sm.load()
     nlp = spacy.load('en_core_web_sm')
     doc = nlp(resume)
     for ent in doc.ents:
