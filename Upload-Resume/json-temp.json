@@ -1,5 +1,5 @@
 {
-  "PhoneNo": "Behrad",
+  "PhoneNo": "+43123456789",
   "Email": "behrad@gmail.com",
   "Work": [
     {
@@ -25,6 +25,13 @@
   ],
   "string": "Hello World",
   "skills": [
+    {
+      "name": "A category of job skills (e.g. 'Programming Languages')",
+      "level": "",
+      "keywords": [
+        "Keywords under this category (e.g. 'Java', 'C++', etc)"
+      ]
+    },
     {
       "name": "A category of job skills (e.g. 'Programming Languages')",
       "level": "",

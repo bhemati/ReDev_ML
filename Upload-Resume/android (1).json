@@ -1,0 +1,120 @@
+{
+  "PhoneNo": "+989126086227",
+  "Email": "hajhosseinico@gmail.com",
+  "Work": [
+    {
+      "company": "ComOn",
+      "position": "Product Manager",
+      "startDate": "2020-03-01",
+      "endDate": "",
+      "summary": "Product manager",
+      "highlights": [
+        
+      ],
+      "projects": [
+        "ComOn: Messenger with voice and video call"
+      ]
+    },
+    {
+      "company": "Pishgaman Fanavari Hoodad",
+      "position": "Senior Android Developer",
+      "startDate": "2018-06-01",
+      "endDate": "2019-09-01",
+      "summary": "",
+      "highlights": [
+        ""
+      ],
+      "projects":[ "Taak: Audio/Electronic Book Store", "HamAhang: music streaming application.","HamNava: Religious music streaming application."," Payda: Online Wallet."
+      ]
+    },
+    {
+      "company": "Soren System Sharif",
+      "position": "Senior Android Developer",
+      "startDate": "2018-05-01",
+      "endDate": "2019-03-01",
+      "summary": "",
+      "highlights": [
+        ""
+      ],
+      "projects":[ "MoneyX: Online Money Transfer: Peer to Peer Money Transferring, Mobile Money Transferring, Mobile Recharge, Bill Payment with (QR Code), NFC Payment, E-Wallet, Online Shop, Expense & Share Splitter.",
+        " MoneyX Seller: MoneyX Seller is your handy Online Store. Link" ,
+        "SahamYaab: Social Trading Network with Real-Time Data Providing based on 'lightstreamer' library. Link"
+      ]
+    },
+    {
+      "company": "Rahkarhaye Hamrahe Karina",
+      "position": "Senior Android Developer",
+      "startDate": "2017-07-01",
+      "endDate": "2018-04-01",
+      "summary": "",
+      "highlights": [
+        ""
+      ],
+      "projects":[ "Ritmo - Listen Persian Music: Music Streaming Application (more than 50K users at that time) ","AvaYaab: Identified musics that's playing or stored in SD-Card. (never released in markets but Reportage's are available in most of Iranian Media Report Pages."
+      ]
+    },
+    {
+      "company": "AxPrint",
+      "position": "Senior Android Developer",
+      "startDate": "2016-09-01",
+      "endDate": "2017-07-01",
+      "summary": "",
+      "highlights": [
+        ""
+      ],
+      "projects":[ "AxPrint: Android Application that allows individuals to take or select their Photos, Add effects to the them, Select the Paper type and Deliver them in their address. Link"
+      ]
+    },
+    {
+      "company": "Andishe Parse Kish",
+      "position": "Senior Android Developer",
+      "startDate": "2015-07-01",
+      "endDate": "2016-09-01",
+      "summary": "",
+      "highlights": [
+        ""
+      ],
+      "projects":[ "Cheshmak: Video Streaming Application based on Customizing ExoPlayer Library to implement HLS Video Player with OAUTH2 Authentication Level. ","WeCook: Video Streaming Application that show's Country-specific food videos for Iranian Television Channels."
+      ]
+    },
+    {
+      "company": "Tadbir Gostaran",
+      "position": "Android Developer",
+      "startDate": "2014-10-01",
+      "endDate": "2015-10-01",
+      "summary": "",
+      "highlights": [
+        ""
+      ],
+      "projects":[ "Top: Android application for Parsian Bank. (more than 1M users)","3soot: Android application for Saman Bank. (more than 500K users)","Iraq: An android application that presents beauty of mysterious places of Iraq (did not release in markets)","Hossein Elahi Ghomshei: Android application that presents the great amount of MR Ghomshei's works. (ordered by MS ghomshei)","AFC: Real time android application that show's Asian-Football-Cup from Channel 2 of Iran television."
+      ]
+    },
+    {
+      "company": "Freelancer,",
+      "position": "C# Developer",
+      "startDate": "2013-10-01",
+      "endDate": "2014-10-01",
+      "summary": "",
+      "highlights": [
+        ""
+      ],
+      "projects":[ "Design and develop a Windows Application for TAK language Institute.",
+        "Design and develop Task Management Windows Application.",
+        "Design and Develop English Learning game for children.",
+        "Design and develop 10 finger typing.",
+        "and more than 5 university projects written in c# language"
+      ]
+    }
+  ],
+  "string": "Hello World",
+  "skills": [
+    "Kotlin,","Java,","Dagger","2,","Coroutines,","Retrofit,","Volley,","MaterialDesign,","UnitTesting,","UITesting,","SQLite/Realm/Room,","Google’s API,","Google Sdk,","Socket Programming,","Restful Api","Push Notification"
+  "FCM/GCM,","Object Oriented", "Design Patterns","Agile","Scrum","Refactoring","FireBase","Fabric","Crashlytics","MultiThreading","Gradle"
+  ],
+  "languages": [
+    {
+      "language": "English",
+      "language": "Farsi"
+    }
+  ]
+}

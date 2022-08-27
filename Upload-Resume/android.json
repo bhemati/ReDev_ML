@@ -1,0 +1,64 @@
+{
+  "PhoneNo": "",
+  "Email": "goudarzi1212@gmail.com",
+  "Work": [
+    {
+      "company": "Pardazesh Negar Rashin",
+      "position": "Senior Android Developer",
+      "startDate": "2019-10-01",
+      "endDate": "",
+      "summary": "Working as part of a developing team, I design and improve and Implement the Android Applications for this company. The most important product of this company is Gap film and it’s a subscription-based streaming services That allows our members to watch TV shows and movies. This app has 4Million active user in Google Play.",
+      "highlights": [
+        "Implemented new features for applications in Kotlin.",
+        "Determined architectural and product design details for open-ended tasks or specifications.",
+        "Collaborated with quality engineers, user research, product management, design, and support teams to ensure quality in all phases of app development.",
+        "Wrote elegant, self-documenting code, easy to read and adapt for other developers.",
+        "Using Unit Testing and Integration Testing.",
+        "Fixed bugs with code, design patterns and miscellaneous occurrences during projects."
+      ],
+      "projects": [
+        "Gapfilm Oct2019 - Present Design, architecture, and implementation of the android application",
+        "Gapfilm for Android TV Jun 2020 - Present implementation and developing gap film from only usable on mobile devices to something enjoyable on android TVs or android boxes for our user. I helped designed new layout for whole app with new features with clean and optimized code.",
+        "Kotlin, MVVM, Dagger, FCM, Notifications, Rest APIs, Room, Kotlin Coroutine, Rx Java, retrofit, Work, Services, Navigation Component, Exo Player, google Ads, Download Manger"
+      ]
+    },
+    {
+      "company": "Hamgam Corporate Group",
+      "position": "Senior Android Developer",
+      "startDate": "2018-06-01",
+      "endDate": "2019-09-01",
+      "summary": "Working as part of a developing team, I was helping develop and enhance a private application for JTI branch of Iran that focus on sale and navigate with Google map by route, our application was specifically for JTI salesman all over Iran and helped to sell over million JTI’s content in Iran.",
+      "highlights": [
+        "Implemented new features for applications in Kotlin. Writing clean and efficient codes. Using Unit Testing and Integration Testing. Collaborating with cross-functional teams to define and design new features. Troubleshoot and Solves Problems in New and Existing Applications."
+      ],
+      "projects":[ "Private JTI Application Jun 2018 – Sep 2019 this app is private JTI ( Japan Tabacco International ) application for Iran branch which focuses on sales , allowing salesman to navigate by map to the store and demonstrate their product and take offer and submit them to company, I help add and Implement new features and fix bugs.",
+        "Kotlin, MVP, Dagger, Firebase, Rest APIs, SQLite, RX Java, Retrofit, Work, Services, Google map & Routs, Read and Writes file on Storage, Download manger"
+      ]
+    },
+    {
+      "company": "Green Mind Corp",
+      "position": " Android Developer",
+      "startDate": "2015-07-01",
+      "endDate": "2018-06-01",
+      "summary": "Working as part of a developing team, which create applications for our clients, Geen Mind Corp was my first company and I started Junior at Mar 2016 until Feb 2016, after a year I promoted to Android Developer and as new android developer study and learn new Technologies was my priority.",
+      "highlights": [
+        "Writing clean and efficient codes for Android applications. Responsible for the build, deployment and maintenance of Android App. Monitoring the performance of live apps and work on optimizing them at the code level. Worked with the UI team to design the appropriate icon and display for the screens."
+      ],
+      "projects":[ "Sharjbook Aug 2017 – Mar 2018 a management application that allows building managers to record their financial transactions, cash flow accounts. I was part development Team which design, implement this application from scratch.",
+        "Alovakil Feb 2017 - Jun 2017 lawyer services app which contains quality content about law and fast respond to your question about Iranian law.",
+        "Chilee Jul 2016 – Dec 2016 shopping app, Chilee has big market and vast majority of products and selling its products in big scale",
+        "Kotlin, MVP, Dagger, Firebase, Rest APIs, SQLite, RX Java, Retrofit, Work, Services, Google map & Routs, Read and Writes file on Storage, Download manger"
+      ]
+    }
+  ],
+  "string": "Hello World",
+  "skills": [
+    "Android", "Kotlin", "Flutter", "Android Development", "Scrum", "Android SDK", "Hilt", "Rx java", "SQLite", "Room", "MVP", "Jetpack Compose", "Java", "Android Development", "Object-Oriented Programing", "Jira", "Dagger", "Firebase", "Kotlin", "Coroutine", "Realm", "MVVM", "Clean Architecture", "Google APIs"
+  ],
+  "languages": [
+    {
+      "language": "Language name",
+      "fluency": "Your language fluency"
+    }
+  ]
+}
