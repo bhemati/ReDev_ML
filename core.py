@@ -227,8 +227,8 @@ def res(jobfile,skillset,jd_exp):
             text = [exp_text]
             vector = vectorizer.transform(text)
             Resume_Vector.append(vector)
-            skill_text = json.dumps(i["skills"])
-            Resume_skill_vector.append(skills.programmingScore(exp_text,jobfile+skillset))
+            skill_text = json.dumps(i["skills"]) + exp_text
+            Resume_skill_vector.append(skills.programmingScore(skill_text,jobfile+skillset))
             # exp_text = i.Work.to_string()
             experience = extract_expJ.get_features(i)
             Resume_name_vector.append(experience)

@@ -23,8 +23,7 @@ class ExtractExpJ:
         text = json.dumps(dic)
         self.preprocess_data(text)
         self.tokenize(text)
-        print("DEBUG")
-        print(dic)
+        
         return self.get_exp(dic)
             
     def preprocess_data(self, document):
@@ -67,6 +66,7 @@ class ExtractExpJ:
             print(e)
     
     def get_exp(self, input):
+        experience = []
         experience_df=pd.DataFrame(columns=('Type', 'Years', 'Months', 'Location'))
         pos = 0
         for exp in input['Work']:
@@ -76,7 +76,7 @@ class ExtractExpJ:
                 enddate = datetime.strptime(exp['endDate'],"%Y-%m-%d")
             startdate = datetime.strptime(exp['startDate'],"%Y-%m-%d")
             years = relativedelta(enddate,startdate).years
-            expType=1
+            expType=2
             pos = pos + 1
             experience_df.loc[experience_df.shape[0]] = [expType, years, 0, pos]
     # def get_exp(self,inputString):
@@ -135,7 +135,10 @@ class ExtractExpJ:
             if not experience_df.empty:
                 #experience_df = experience_df.sort_values(['Type', 'Years','Location'], ascending=[True, False, True])
                 experience_df = experience_df.sort_values(['Type', 'Years'], ascending=[True, False])
-                experience = float(experience_df['Years'].iloc[0])
+                experience = float(experience_df['Years'].sum())
+                print("DEBUG")
+                print(experience_df)
+                print(experience)
             else:
                 experience = 0.0
                         
