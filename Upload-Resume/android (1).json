@@ -107,14 +107,11 @@
     }
   ],
   "string": "Hello World",
-  "skills": [
-    "Kotlin,","Java,","Dagger","2,","Coroutines,","Retrofit,","Volley,","MaterialDesign,","UnitTesting,","UITesting,","SQLite/Realm/Room,","Google’s API,","Google Sdk,","Socket Programming,","Restful Api","Push Notification"
-  "FCM/GCM,","Object Oriented", "Design Patterns","Agile","Scrum","Refactoring","FireBase","Fabric","Crashlytics","MultiThreading","Gradle"
+  "skills": [ "Android",
+    "Kotlin,","Java,","Dagger","2,","Coroutines,","Retrofit,","Volley,","MaterialDesign,","UnitTesting,","UITesting,","SQLite/Realm/Room,","Google’s API,","Google Sdk,","Socket Programming,","Restful Api","Push Notification",
+  "FCM/GCM","Object Oriented", "Design Patterns","Agile","Scrum","Refactoring","FireBase","Fabric","Crashlytics","MultiThreading","Gradle"
   ],
   "languages": [
-    {
-      "language": "English",
-      "language": "Farsi"
-    }
+    "English", "Farsi"
   ]
 }

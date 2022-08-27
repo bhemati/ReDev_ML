@@ -10,11 +10,12 @@ from gensim.summarization.summarizer import summarize
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import PyPDF2
-import getCategory as skills
-from extract_exp import ExtractExp
+import getCategoryJ as skills
+from extract_expJ import ExtractExpJ
 from striprtf.striprtf import rtf_to_text
 from pathlib import Path
-
+import pandas as pd
+import json
 
 warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 
@@ -61,14 +62,16 @@ def res(jobfile,skillset,jd_exp):
     LIST_OF_FILES_PDF = []
     LIST_OF_FILES_DOC = []
     LIST_OF_FILES_DOCX = []
+    LIST_OF_FILES_JSON = []
     Resumes = []
+    Jresumes = []
     Temp_pdf = []
     os.chdir("..")
     print(os.getcwd())
     os.chdir('Upload-Resume')
     jd_weightage = 15
     not_found = 'Not Found'
-    extract_exp = ExtractExp()
+    extract_expJ = ExtractExpJ()
     
     
     for file in glob.glob('**/*.pdf', recursive=True):
@@ -80,9 +83,11 @@ def res(jobfile,skillset,jd_exp):
     for file in glob.glob('**/*.rtf', recursive=True):
         LIST_OF_FILES_DOCX.append(file)
     for file in glob.glob('**/*.txt', recursive=True):
-        LIST_OF_FILES_DOCX.append(file)     
+        LIST_OF_FILES_DOCX.append(file)  
+    for file in glob.glob('**/*.json', recursive=True):
+        LIST_OF_FILES_JSON.append(file)     
 
-    LIST_OF_FILES = LIST_OF_FILES_DOC + LIST_OF_FILES_DOCX + LIST_OF_FILES_PDF
+    LIST_OF_FILES = LIST_OF_FILES_DOC + LIST_OF_FILES_DOCX + LIST_OF_FILES_PDF + LIST_OF_FILES_JSON
     # LIST_OF_FILES.remove("antiword.exe")
     print("This is LIST OF FILES")
     print(LIST_OF_FILES)
@@ -164,7 +169,18 @@ def res(jobfile,skillset,jd_exp):
                 Resumes.extend(c)
                 Ordered_list_Resume.append(i)
                 f.close()
-            except Exception as e: print(e)    
+            except Exception as e: print(e) 
+
+        elif Temp[1] == "json" :
+            print(count," This is json" , i)
+            try:
+                with open(i) as json_data:
+                    data = json.load(json_data)
+                # df = pd.json_normalize(data)
+                Jresumes.append(data)
+                Ordered_list_Resume.append(i)
+                print(Jresumes[0])
+            except Exception as e: print(e)     
                     
                 
         elif Temp[1] == "ex" or Temp[1] == "Exe" or Temp[1] == "EXE":
@@ -195,39 +211,83 @@ def res(jobfile,skillset,jd_exp):
     tempList = Ordered_list_Resume 
     os.chdir('../')
     flask_return = []
-    for index,i in enumerate(Resumes):
+    
+    for index,i in enumerate(Jresumes):
 
-        text = i
-        temptext = str(text)
-        tttt = str(text)
+        # text = i
+        # temptext = str(text)
+        # tttt = str(text)
        
         
         try:
-            tttt = summarize(tttt, word_count=100) 
-            text = [tttt]
+            # tttt = summarize(tttt, word_count=100) 
+            # text = [tttt]
+            # vector = vectorizer.transform(text)
+            exp_text = json.dumps(i["Work"])
+            text = [exp_text]
             vector = vectorizer.transform(text)
-            Resume_Vector.append(vector.toarray())
-            Resume_skill_vector.append(skills.programmingScore(temptext,jobfile+skillset))
-            experience = extract_exp.get_features(temptext)
+            Resume_Vector.append(vector)
+            skill_text = json.dumps(i["skills"])
+            Resume_skill_vector.append(skills.programmingScore(exp_text,jobfile+skillset))
+            # exp_text = i.Work.to_string()
+            experience = extract_expJ.get_features(i)
             Resume_name_vector.append(experience)
-            temp_phone = entity.extract_phone_numbers(temptext)
+            # temp_phone = entity.extract_phone_numbers(temptext)
+            temp_phone = i["PhoneNo"]
             if(len(temp_phone) == 0):
                 Resume_phoneNo_vector.append(not_found)
             else:
                  Resume_phoneNo_vector.append(temp_phone)
-            temp_email = entity.extract_email_addresses(temptext)
+            # temp_email = entity.extract_email_addresses(temptext)
+            temp_email = i["Email"]
             if(len(temp_email) == 0):
                 Resume_email_vector.append(not_found)
             else:
                  Resume_email_vector.append(temp_email)
                 
            
-            Resume_exp_vector.append(extract_exp.get_exp_weightage(jd_exp,experience))
-            Resume_nonTechSkills_vector.append(skills.NonTechnicalSkillScore(temptext,jobfile+skillset))
+            Resume_exp_vector.append(extract_expJ.get_exp_weightage(jd_exp,experience))
+            Resume_nonTechSkills_vector.append(skills.NonTechnicalSkillScore(exp_text,jobfile+skillset))
+            print("index:", index)
             print("Rank prepared for ",Ordered_list_Resume.__getitem__(index))
         except Exception:
             print(traceback.format_exc())
             tempList.__delitem__(index)
+            
+   
+    # for index,i in enumerate(Resumes):
+
+    #     text = i
+    #     temptext = str(text)
+    #     tttt = str(text)
+       
+        
+    #     try:
+    #         tttt = summarize(tttt, word_count=100) 
+    #         text = [tttt]
+    #         vector = vectorizer.transform(text)
+    #         Resume_Vector.append(vector.toarray())
+    #         Resume_skill_vector.append(skills.programmingScore(temptext,jobfile+skillset))
+    #         experience = extract_exp.get_features(temptext)
+    #         Resume_name_vector.append(experience)
+    #         temp_phone = entity.extract_phone_numbers(temptext)
+    #         if(len(temp_phone) == 0):
+    #             Resume_phoneNo_vector.append(not_found)
+    #         else:
+    #              Resume_phoneNo_vector.append(temp_phone)
+    #         temp_email = entity.extract_email_addresses(temptext)
+    #         if(len(temp_email) == 0):
+    #             Resume_email_vector.append(not_found)
+    #         else:
+    #              Resume_email_vector.append(temp_email)
+                
+           
+    #         Resume_exp_vector.append(extract_exp.get_exp_weightage(jd_exp,experience))
+    #         Resume_nonTechSkills_vector.append(skills.NonTechnicalSkillScore(temptext,jobfile+skillset))
+    #         print("Rank prepared for ",Ordered_list_Resume.__getitem__(index))
+    #     except Exception:
+    #         print(traceback.format_exc())
+    #         tempList.__delitem__(index)
             
    
     for index,i in enumerate(Resume_Vector):

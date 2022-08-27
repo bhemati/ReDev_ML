@@ -56,9 +56,6 @@
     "Android", "Kotlin", "Flutter", "Android Development", "Scrum", "Android SDK", "Hilt", "Rx java", "SQLite", "Room", "MVP", "Jetpack Compose", "Java", "Android Development", "Object-Oriented Programing", "Jira", "Dagger", "Firebase", "Kotlin", "Coroutine", "Realm", "MVVM", "Clean Architecture", "Google APIs"
   ],
   "languages": [
-    {
-      "language": "Language name",
-      "fluency": "Your language fluency"
-    }
+    "English", "Farsi"
   ]
 }
