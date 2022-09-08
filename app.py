@@ -192,6 +192,8 @@ if __name__ == '__main__':
     df = pd.DataFrame(columns=['Title','Experience','Primary Skill','Technology'])
     # df = df.append({'Title': title,'Experience':jd_exp,'Primary Skill':data_set['Primary Skill'][0],'Technology':data_set['Technology'][0]}, ignore_index=True)
     df.loc[df.shape[0]] = [title, jd_exp, data_set['Primary Skill'][0], data_set['Technology'][0]]
+    with open('json_data.json', 'w') as outfile:
+        outfile.truncate(0)
     for r in flask_return:
         # json_object = json.dumps(r.__dict__, indent = 4)
         # print(json_object)
