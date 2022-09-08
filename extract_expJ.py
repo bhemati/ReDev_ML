@@ -136,9 +136,7 @@ class ExtractExpJ:
                 #experience_df = experience_df.sort_values(['Type', 'Years','Location'], ascending=[True, False, True])
                 experience_df = experience_df.sort_values(['Type', 'Years'], ascending=[True, False])
                 experience = float(experience_df['Years'].sum())
-                print("DEBUG")
-                print(experience_df)
-                print(experience)
+                
             else:
                 experience = 0.0
                         
