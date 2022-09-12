@@ -4,12 +4,12 @@ import os
 import warnings
 import textract
 import requests
-from flask import (Flask, json, Blueprint, jsonify, redirect, render_template, request,
-                   url_for)
+# from flask import (Flask, json, Blueprint, jsonify, redirect, render_template, request,
+#                    url_for)
 from gensim.summarization import summarize
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.neighbors import NearestNeighbors
-from werkzeug.utils import secure_filename
+# from werkzeug.utils import secure_filename
 
 import pdf2txt as pdf
 import PyPDF2
@@ -19,11 +19,11 @@ from autocorrect import spell
 
 warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 
-app = Flask(__name__)
+# app = Flask(__name__)
 
 
-app.config['UPLOAD_FOLDER'] = 'Original_Resumes/'
-app.config['ALLOWED_EXTENSIONS'] = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+# app.config['UPLOAD_FOLDER'] = 'Original_Resumes/'
+# app.config['ALLOWED_EXTENSIONS'] = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 
 class ResultElement:
