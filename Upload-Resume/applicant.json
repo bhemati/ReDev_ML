@@ -1,0 +1,138 @@
+{
+    "id": 87,
+    "jobId": 1,
+    "userId": 28,
+    "email": "Rowland_Jast@yahoo.com",
+    "phoneCountryCode": "43",
+    "phoneNumber": "1-601-620-6580",
+    "qa": [
+        {
+            "answer": "Yes",
+            "questionId": 1
+        }
+    ],
+    "createdAt": "2022-09-08T15:02:06.000+04:30",
+    "updatedAt": "2022-09-08T15:02:06.000+04:30",
+    "user": {
+        "id": 28,
+        "email": "Rowland_Jast@yahoo.com",
+        "username": "Aisha_Erdman49",
+        "firstName": "Aisha",
+        "lastName": "Erdman",
+        "avatarUrl": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/430.jpg",
+        "headline": "Internal Intranet Strategist @ Prohaska - Kunze",
+        "profileBio": "Ducimus odit quasi dolorem consequatur cumque corrupti repellat fugit. Esse repellendus autem quasi eveniet ut praesentium tempore facere. Eos et neque molestias a ut velit eum eum debitis.",
+        "website": "https://blissful-shin.name",
+        "isVerifiedByEmail": false,
+        "loginVia": null,
+        "userType": 0,
+        "jobSeekingType": 0,
+        "interests": [
+            {
+                "id": 5,
+                "title": "Cyber Security",
+                "imageUrl": "/drive/assets/topics/Cyber-Security.jpg"
+            },
+            {
+                "id": 3,
+                "title": "Mobile Development",
+                "imageUrl": "/drive/assets/topics/Mobile-Development.jpg"
+            },
+            {
+                "id": 11,
+                "title": "Success Story",
+                "imageUrl": "/drive/assets/topics/Success-Story.jpg"
+            },
+            {
+                "id": 9,
+                "title": "Marketing",
+                "imageUrl": "/drive/assets/topics/Marketing.jpg"
+            },
+            {
+                "id": 18,
+                "title": "Software Development",
+                "imageUrl": "/drive/assets/topics/Software-Development.jpg"
+            }
+        ],
+        "languages": [
+            {
+                "name": "English",
+                "level": 1,
+                "levelStr": "Beginner"
+            },
+            {
+                "name": "German",
+                "level": 3,
+                "levelStr": "Advanced"
+            },
+            {
+                "name": "French",
+                "level": 3,
+                "levelStr": "Advanced"
+            }
+        ],
+        "skills": [
+            {
+                "id": 491,
+                "title": "Financial Statement Analysis"
+            },
+            {
+                "id": 162,
+                "title": "Information Retrieval Data Sets"
+            },
+            {
+                "id": 103,
+                "title": "Grand Central Dispatch (GCD)"
+            },
+            {
+                "id": 507,
+                "title": "Oracle"
+            },
+            {
+                "id": 240,
+                "title": "Active Learning"
+            }
+        ],
+        "educations": [
+            {
+                "id": 378,
+                "school": "Texas A&M University",
+                "degree": "Bachelor's",
+                "field": "Computer Science",
+                "startYear": 2008,
+                "endYear": 2012
+            },
+            {
+                "id": 379,
+                "school": "University Of Groningen",
+                "degree": "Master",
+                "field": "Physics",
+                "startYear": 2011,
+                "endYear": 2014
+            }
+        ],
+        "experiences": [
+            {
+                "id": 577,
+                "title": "National Mobility Manager",
+                "companyName": "Anderson - Heaney",
+                "location": "Plainfield, AL",
+                "startAt": "2012-04-14",
+                "endAt": "2012-12-14",
+                "headline": null,
+                "description": "Cumque totam tenetur. Vero neque in aspernatur alias perferendis qui corrupti. Saepe totam accusamus aliquid est impedit ipsam quos autem fugiat. Dolores omnis maxime.",
+                "employmentType": 1,
+                "employmentTypeStr": "Full-time",
+                "fromToStr": "Apr 2012 - Dec 2012"
+            }
+        ],
+        "fullName": "Aisha Erdman",
+        "$extras": {
+            "skills_count": 5,
+            "interests_count": 5,
+            "followers_count": 28,
+            "posts_count": 19
+        }
+    },
+    "assessmentScore": 65.5
+}

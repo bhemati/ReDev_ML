@@ -1,0 +1,66 @@
+{
+	"id": 2,
+	"title": "Senior Mobile App Developer - iOS",
+	"description": "We believe our customers deserve a great experience when interacting with our platforms. We achieve this by developing the right things in the right way at the right time and with the right people. We create and enable mobile digital experiences that are engaging, robust and secure.\n\nWe create value for our customers and the company by understanding how and why our users use our products. We are a highly collaborative team of high performers. We love to explore, challenge and have loads of fun while challenging the status quo and experimenting.",
+	"responsibilities": "As a Senior Mobile App Developer-iOS at Parsition, you will work across a variety of disciplines and apply your talent to design, develop and maintain a variety of advanced mobile app solutions for existing, new and emerging businesses.\n\nThey are thought leaders on how best to use modern mobile application technologies and engineering principles to enable Parsition to provide the best service to its customers. You will coach and guide others in a cross-functional team and be committed to continuous improvement.\n\nThis is a great opportunity to work with talented and professional cross-functional Agile teams, bringing your experience, expertise and leadership skills while working for a company that believes in innovation, experimentation and people.",
+	"requirements": "You have solid commercial experience in native app development at senior level using Swift or Java/Kotlin. You are an advocate of contemporary application development practices, continuous integration and delivery. You have a strong sense of quality and think architecturally when designing solutions so that they are adaptable and maintainable.\n\nYou are a great team player and communicator with a passion for user experience, technology and mobile applications. You will be able to provide technical leadership to other software developers and work in a collaborative, cross-functional, agile environment.\n\nThey love getting things done, especially shipping software!\n\n\nExciting growth opportunities. Join Parsition now!",
+	"benefits": null,
+	"employment": "Full-time",
+	"environment": "Remote",
+	"experience": "Senior",
+	"salaryMin": 2000,
+	"salaryMax": 2900,
+	"salaryCurrency": "EUR",
+	"status": "InProgress",
+	"applyDeadline": "2022-11-07T03:30:00.000+03:30",
+	"createdAt": "2022-09-08T15:01:31.000+04:30",
+	"updatedAt": "2022-09-08T15:01:31.000+04:30",
+	"cityId": 2761369,
+	"companyId": 1,
+	"city": {
+		"id": 2761369,
+		"name": "Vienna",
+		"subCountry": "Vienna",
+		"countryCode": "AT",
+		"countryName": "Austria"
+	},
+	"company": {
+		"id": 1,
+		"name": "Parsition GmbH",
+		"logoUrl": "https://media-exp1.licdn.com/dms/image/C4E0BAQGEBAp6eOJUWg/company-logo_200_200/0/1634548998041?e=1669248000&v=beta&t=Qf3roc88SteBraewo4lHFCtwtTWeE2EE4SEShk-mW1w",
+		"coverUrl": "https://media-exp1.licdn.com/dms/image/C4E1BAQHb21u0VMZimA/company-background_10000/0/1634548838202?e=1661878800&v=beta&t=ezC25aGYNxw5-qt0ffwNkfLshvjSzqkR7NMYqzA8ZEM",
+		"countryCode": "AT",
+		"cityId": 2761369,
+		"about": "Experts in web technologies, mobile technologies and digital marketing, we offer end-to-end solutions so you don't have to hire multiple companies to make your project happen.",
+		"industry": "Software Development",
+		"companySize": "11-50",
+		"city": {
+			"id": 2761369,
+			"name": "Vienna",
+			"subCountry": "Vienna",
+			"countryCode": "AT",
+			"countryName": "Austria"
+		},
+		"companySizeIndex": 2,
+		"subscription": null
+	},
+	"roles": [
+		{
+			"id": 56,
+			"title": "Cyberintelligence specialist"
+		}
+	],
+	"employmentKey": 1,
+	"environmentKey": 2,
+	"experienceKey": 4,
+	"tags": [
+		"Full-time",
+		"Remote",
+		"Senior"
+	],
+	"salaryStr": "~2900€/mo",
+	"sectionId": 1,
+	"roleId": 56,
+	"roleStr": "Cyberintelligence specialist",
+	"sectionStr": "Information Technology"
+}
