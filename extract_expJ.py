@@ -67,18 +67,18 @@ class ExtractExpJ:
     
     def get_exp(self, input):
         experience = []
-        experience_df=pd.DataFrame(columns=('Type', 'Years', 'Months', 'Location'))
+        experience_df=pd.DataFrame(columns=( 'Years', 'Months', 'Location'))
         pos = 0
-        for exp in input['Work']:
-            if exp['endDate'] == "":
+        for exp in input['user']['experiences']:
+            if exp['endAt'] == "":
                 enddate = datetime.now()
             else:
-                enddate = datetime.strptime(exp['endDate'],"%Y-%m-%d")
-            startdate = datetime.strptime(exp['startDate'],"%Y-%m-%d")
+                enddate = datetime.strptime(exp['endAt'],"%Y-%m-%d")
+            startdate = datetime.strptime(exp['startAt'],"%Y-%m-%d")
             years = relativedelta(enddate,startdate).years
-            expType=2
+            # expType=2
             pos = pos + 1
-            experience_df.loc[experience_df.shape[0]] = [expType, years, 0, pos]
+            experience_df.loc[experience_df.shape[0]] = [ years, 0, pos]
     # def get_exp(self,inputString):
     #     expMatchStrings = ['experience', 'exp ', 'exp.', 'exp:','experience:', 'works', 'projects']
     #     #TODO need to calculate months also
@@ -134,7 +134,7 @@ class ExtractExpJ:
                                                                                 
             if not experience_df.empty:
                 #experience_df = experience_df.sort_values(['Type', 'Years','Location'], ascending=[True, False, True])
-                experience_df = experience_df.sort_values(['Type', 'Years'], ascending=[True, False])
+                experience_df = experience_df.sort_values([ 'Years'], ascending=[False])
                 experience = float(experience_df['Years'].sum())
                 
             else:

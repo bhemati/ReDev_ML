@@ -223,23 +223,24 @@ def res(jobfile,skillset,jd_exp):
             # tttt = summarize(tttt, word_count=100) 
             # text = [tttt]
             # vector = vectorizer.transform(text)
-            exp_text = json.dumps(i["Work"])
+            exp_text = json.dumps(i['user']['experiences'])
             text = [exp_text]
             vector = vectorizer.transform(text)
             Resume_Vector.append(vector)
-            skill_text = json.dumps(i["skills"]) + exp_text
+            user_skills = ", ".join([x['title'] for x in i['user']['skills']])
+            skill_text = user_skills + exp_text
             Resume_skill_vector.append(skills.programmingScore(skill_text,jobfile+skillset))
             # exp_text = i.Work.to_string()
             experience = extract_expJ.get_features(i)
             Resume_name_vector.append(experience)
             # temp_phone = entity.extract_phone_numbers(temptext)
-            temp_phone = i["PhoneNo"]
+            temp_phone = i["phoneNumber"]
             if(len(temp_phone) == 0):
                 Resume_phoneNo_vector.append(not_found)
             else:
                  Resume_phoneNo_vector.append(temp_phone)
             # temp_email = entity.extract_email_addresses(temptext)
-            temp_email = i["Email"]
+            temp_email = i["email"]
             if(len(temp_email) == 0):
                 Resume_email_vector.append(not_found)
             else:

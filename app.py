@@ -182,16 +182,18 @@ if __name__ == '__main__':
     # app.run('127.0.0.1' , 5000 , debug=True)
     # app.run('0.0.0.0' , 5000 , debug=True , threaded=True)
     os.chdir('Upload-JD')
-    file = glob.glob('*.xlsx', recursive=False)
-    data_set = pd.read_excel(file[0], engine='openpyxl')
-    search_st = data_set['High Level Job Description'][0]
-    skill_text = data_set['Technology'][0] + data_set['Primary Skill'][0]
-    jd_exp = data_set['Yrs Of Exp '][0]
-    title = data_set['Job Title'][0]
+    # file = glob.glob('*.xlsx', recursive=False)
+    # data_set = pd.read_excel(file[0], engine='openpyxl')
+    with open("job.json") as json_data:
+        data_jd = json.load(json_data)
+    search_st = data_jd['description']
+    skill_text = data_jd['responsibilities'] + data_jd['requirements']
+    jd_exp = "3"
+    title = data_jd['title']
     flask_return = core.res(search_st,skill_text,jd_exp)
-    df = pd.DataFrame(columns=['Title','Experience','Primary Skill','Technology'])
+    # df = pd.DataFrame(columns=['Title','Experience','Primary Skill','Technology'])
     # df = df.append({'Title': title,'Experience':jd_exp,'Primary Skill':data_set['Primary Skill'][0],'Technology':data_set['Technology'][0]}, ignore_index=True)
-    df.loc[df.shape[0]] = [title, jd_exp, data_set['Primary Skill'][0], data_set['Technology'][0]]
+    # df.loc[df.shape[0]] = [title, jd_exp, data_jd['Primary Skill'][0], data_jd['Technology'][0]]
     with open('json_data.json', 'w') as outfile:
         outfile.truncate(0)
     for r in flask_return:
