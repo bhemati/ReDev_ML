@@ -3,6 +3,7 @@ import os
 import warnings
 # # from flask import (Flask,session,flash, redirect, render_template, request,
 #                 #    url_for, send_from_directory)
+from flask import Flask, request, jsonify
 import core
 import search
 import pandas as pd
@@ -10,7 +11,7 @@ import json
 
 # warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 
-# app = Flask(__name__)
+app = Flask(__name__)
 
 # app.config.from_object(__name__) # load config from this file , flaskr.py
 
@@ -92,7 +93,25 @@ import json
 #         # df = df.append({'Title': title,'Experience':jd_exp,'Primary Skill':data_set['Primary Skill'][0],'Technology':data_set['Technology'][0]}, ignore_index=True)
 #         df.loc[df.shape[0]] = [title, jd_exp, data_set['Primary Skill'][0], data_set['Technology'][0]]
 #         return render_template('result.html', results = flask_return,jd = df)
-
+@app.route('/results', methods=['GET', 'POST'])
+def res():
+    os.chdir('Upload-JD')
+    with open("job.json") as json_data:
+        data_jd = json.load(json_data)
+    search_st = data_jd['description']
+    skill_text = data_jd['responsibilities'] + data_jd['requirements']
+    jd_exp = "3"
+    title = data_jd['title']
+    flask_return = core.res(search_st,skill_text,jd_exp)
+    with open('json_data.json', 'w') as outfile:
+        outfile.truncate(0)
+    for r in flask_return:
+        # json_object = json.dumps(r.__dict__, indent = 4)
+        # print(json_object)
+        with open('json_data.json', 'a') as outfile:
+            json.dump(r.__dict__, outfile)
+            outfile.write("\n")
+    return "done"
 # @app.route('/uploadResume', methods=['GET', 'POST'])
 # def uploadResume():
 #     return render_template('uploadresume.html')
@@ -178,29 +197,29 @@ import json
 
 
 if __name__ == '__main__':
-    # app.run(debug = True) 
-    # app.run('127.0.0.1' , 5000 , debug=True)
-    # app.run('0.0.0.0' , 5000 , debug=True , threaded=True)
-    os.chdir('Upload-JD')
+    app.run(debug = True) 
+    # app.run('127.0.0.1' , 5001 , debug=True)
+    # app.run('0.0.0.0' , 5001 , debug=True )
+    # os.chdir('Upload-JD')
     # file = glob.glob('*.xlsx', recursive=False)
     # data_set = pd.read_excel(file[0], engine='openpyxl')
-    with open("job.json") as json_data:
-        data_jd = json.load(json_data)
-    search_st = data_jd['description']
-    skill_text = data_jd['responsibilities'] + data_jd['requirements']
-    jd_exp = "3"
-    title = data_jd['title']
-    flask_return = core.res(search_st,skill_text,jd_exp)
-    # df = pd.DataFrame(columns=['Title','Experience','Primary Skill','Technology'])
-    # df = df.append({'Title': title,'Experience':jd_exp,'Primary Skill':data_set['Primary Skill'][0],'Technology':data_set['Technology'][0]}, ignore_index=True)
-    # df.loc[df.shape[0]] = [title, jd_exp, data_jd['Primary Skill'][0], data_jd['Technology'][0]]
-    with open('json_data.json', 'w') as outfile:
-        outfile.truncate(0)
-    for r in flask_return:
-        # json_object = json.dumps(r.__dict__, indent = 4)
-        # print(json_object)
-        with open('json_data.json', 'a') as outfile:
-            json.dump(r.__dict__, outfile)
-            outfile.write("\n")
+    # with open("job.json") as json_data:
+    #     data_jd = json.load(json_data)
+    # search_st = data_jd['description']
+    # skill_text = data_jd['responsibilities'] + data_jd['requirements']
+    # jd_exp = "3"
+    # title = data_jd['title']
+    # flask_return = core.res(search_st,skill_text,jd_exp)
+    # # df = pd.DataFrame(columns=['Title','Experience','Primary Skill','Technology'])
+    # # df = df.append({'Title': title,'Experience':jd_exp,'Primary Skill':data_set['Primary Skill'][0],'Technology':data_set['Technology'][0]}, ignore_index=True)
+    # # df.loc[df.shape[0]] = [title, jd_exp, data_jd['Primary Skill'][0], data_jd['Technology'][0]]
+    # with open('json_data.json', 'w') as outfile:
+    #     outfile.truncate(0)
+    # for r in flask_return:
+    #     # json_object = json.dumps(r.__dict__, indent = 4)
+    #     # print(json_object)
+    #     with open('json_data.json', 'a') as outfile:
+    #         json.dump(r.__dict__, outfile)
+    #         outfile.write("\n")
     # return render_template('result.html', results = flask_return,jd = df)
     
