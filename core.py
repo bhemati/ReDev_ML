@@ -16,6 +16,7 @@ from striprtf.striprtf import rtf_to_text
 from pathlib import Path
 import pandas as pd
 import json
+import urllib.request
 
 warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 
@@ -173,23 +174,33 @@ def res(jobfile,skillset,jd_exp):
                 f.close()
             except Exception as e: print(e) 
 
-        elif Temp[1] == "json" :
-            print(count," This is json" , i)
-            try:
-                with open(i) as json_data:
-                    data = json.load(json_data)
-                # df = pd.json_normalize(data)
-                idx = 0
-                for applicant in data:
-                    Jresumes.append(applicant)
-                    Ordered_list_Resume.append(applicant['user']['id'])
-                print(Jresumes[0])
-            except Exception as e: print(e)     
+        # elif Temp[1] == "json" :
+        #     print(count," This is json" , i)
+        #     try:
+        #         with open(i) as json_data:
+        #             data = json.load(json_data)
+        #         # df = pd.json_normalize(data)
+        #         idx = 0
+        #         for applicant in data:
+        #             Jresumes.append(applicant)
+        #             Ordered_list_Resume.append(applicant['user']['id'])
+        #         print(Jresumes[0])
+        #     except Exception as e: print(e)     
                     
                 
         elif Temp[1] == "ex" or Temp[1] == "Exe" or Temp[1] == "EXE":
             print("This is EXE" , i)
             pass
+
+    print("Parsing the URL")
+    try:
+        with urllib.request.urlopen("http://185.110.191.137:3333/ml/job/1/applicant") as url:
+            data = json.load(url)
+        for applicant in data:
+                Jresumes.append(applicant)
+                Ordered_list_Resume.append(applicant['user']['id'])
+                
+    except Exception as e: print(e)
 
     print("Done Parsing.")
     print("Please wait we are preparing ranking.")
@@ -205,7 +216,7 @@ def res(jobfile,skillset,jd_exp):
 
     
     vectorizer = TfidfVectorizer(stop_words='english')
-    # print(text)
+    print("print text line 219 core: ",text)
     vectorizer.fit(text)
     vector = vectorizer.transform(text)
 

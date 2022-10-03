@@ -8,6 +8,7 @@ import core
 import search
 import pandas as pd
 import json
+import urllib.request
 
 # warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 
@@ -96,10 +97,16 @@ app = Flask(__name__)
 @app.route('/results', methods=['GET', 'POST'])
 def res():
     os.chdir('Upload-JD')
-    with open("job.json") as json_data:
-        data_jd = json.load(json_data)
-    search_st = data_jd['description']
-    skill_text = data_jd['responsibilities'] + data_jd['requirements']
+    # with open("job2.json") as json_data:
+    #     data_jd = json.load(json_data)
+    try:
+        with urllib.request.urlopen("http://185.110.191.137:3333/ml/job/1") as url:
+            data_jd = json.load(url)
+    except Exception as e: print(e)
+    search_st = data_jd['description'] + data_jd['responsibilities']
+    print("search_St", search_st)
+    skill_text =  data_jd['requirements']
+    print("skill_text", skill_text)
     jd_exp = "3"
     title = data_jd['title']
     flask_return = core.res(search_st,skill_text,jd_exp)
@@ -197,7 +204,7 @@ def res():
 
 
 if __name__ == '__main__':
-    app.run(debug = True) 
+    app.run('127.0.0.1', 5001, debug = True) 
     # app.run('127.0.0.1' , 5001 , debug=True)
     # app.run('0.0.0.0' , 5001 , debug=True )
     # os.chdir('Upload-JD')
