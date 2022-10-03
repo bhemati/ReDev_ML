@@ -23,11 +23,13 @@ warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 
 
 class ResultElement:
-    def __init__(self, jd, filename,skillRank, name, phoneNo, email, nonTechSkills,exp,finalRank):
+    def __init__(self, jd,applicantId, filename,skillRank, name, phoneNo, email, nonTechSkills,exp,finalRank):
         self.jd = jd
         self.filename = filename
         self.skillRank = skillRank
         self.name = name
+        self.applicantId = applicantId
+        # self.jobId = jobId
         self.phoneNo = phoneNo
         self.email = email
         self.nonTechSkills = nonTechSkills
@@ -177,8 +179,10 @@ def res(jobfile,skillset,jd_exp):
                 with open(i) as json_data:
                     data = json.load(json_data)
                 # df = pd.json_normalize(data)
-                Jresumes.append(data)
-                Ordered_list_Resume.append(i)
+                idx = 0
+                for applicant in data:
+                    Jresumes.append(applicant)
+                    Ordered_list_Resume.append(applicant['user']['id'])
                 print(Jresumes[0])
             except Exception as e: print(e)     
                     
@@ -223,6 +227,7 @@ def res(jobfile,skillset,jd_exp):
             # tttt = summarize(tttt, word_count=100) 
             # text = [tttt]
             # vector = vectorizer.transform(text)
+            id = i['user']['id']
             exp_text = json.dumps(i['user']['experiences'])
             text = [exp_text]
             vector = vectorizer.transform(text)
@@ -232,7 +237,10 @@ def res(jobfile,skillset,jd_exp):
             Resume_skill_vector.append(skills.programmingScore(skill_text,jobfile+skillset))
             # exp_text = i.Work.to_string()
             experience = extract_expJ.get_features(i)
-            Resume_name_vector.append(experience)
+            first_name = i['user']['firstName']
+            last_name = i['user']['lastName']
+            applicant_name = first_name + ' ' + last_name
+            Resume_name_vector.append(applicant_name)
             # temp_phone = entity.extract_phone_numbers(temptext)
             temp_phone = i["phoneNumber"]
             if(len(temp_phone) == 0):
@@ -300,7 +308,7 @@ def res(jobfile,skillset,jd_exp):
         #print(Resume_nonTechSkills_vector)
         #print(Resume_exp_vector)
         final_rating = round(similarity*jd_weightage,2)+Resume_skill_vector.__getitem__(index)+Resume_nonTechSkills_vector.__getitem__(index)+Resume_exp_vector.__getitem__(index)
-        res = ResultElement(round(similarity*jd_weightage,2), tempList.__getitem__(index),round(Resume_skill_vector.__getitem__(index),2),
+        res = ResultElement(round(similarity*jd_weightage,2), tempList.__getitem__(index),tempList.__getitem__(index),round(Resume_skill_vector.__getitem__(index),2),
                            Resume_name_vector.__getitem__(index),Resume_phoneNo_vector.__getitem__(index),Resume_email_vector.__getitem__(index),
                            Resume_nonTechSkills_vector.__getitem__(index),Resume_exp_vector.__getitem__(index),round(final_rating,2))
         flask_return.append(res)

@@ -70,7 +70,7 @@ class ExtractExpJ:
         experience_df=pd.DataFrame(columns=( 'Years', 'Months', 'Location'))
         pos = 0
         for exp in input['user']['experiences']:
-            if exp['endAt'] == "":
+            if exp['endAt'] == None:
                 enddate = datetime.now()
             else:
                 enddate = datetime.strptime(exp['endAt'],"%Y-%m-%d")
