@@ -66,7 +66,7 @@ class ExtractExpJ:
             print(e)
     
     def get_exp(self, input):
-        experience = []
+        experience = 0.0
         experience_df=pd.DataFrame(columns=( 'Years', 'Months', 'Location'))
         pos = 0
         for exp in input['user']['experiences']:
@@ -79,59 +79,7 @@ class ExtractExpJ:
             # expType=2
             pos = pos + 1
             experience_df.loc[experience_df.shape[0]] = [ years, 0, pos]
-    # def get_exp(self,inputString):
-    #     expMatchStrings = ['experience', 'exp ', 'exp.', 'exp:','experience:', 'works', 'projects']
-    #     #TODO need to calculate months also
-    #     yearStrings = ['yrs', 'years', 'yr']
-    #     experience = []
-    #     experience_df=pd.DataFrame(columns=('Type', 'Years', 'Months', 'Location'))
-    #     try:
-    #         pos = 0
-    #         for sentence in self.lines:#find the index of the sentence where the degree is find and then analyse that sentence
-    #             pos = pos+1
-    #             sen=" ".join([words[0].lower() for words in sentence]) #string of words in sentence
-    #             if any(re.search(x,sen) for x in sentence) and any(re.search(x,sen) for x in yearStrings):
-    #                 sen_tokenised= nltk.word_tokenize(sen)
-    #                 tagged = nltk.pos_tag(sen_tokenised)
-    #                 entities = nltk.chunk.ne_chunk(tagged)
-    #                 for subtree in entities.subtrees():
-    #                     for leaf in subtree.leaves():
-    #                         if leaf[1]=='CD':
-    #                             if re.search('total',sen):
-    #                                 expType = 1
-    #                             else: 
-    #                                 if re.search('overall',sen):
-    #                                     expType = 2
-    #                                 else:
-    #                                     expType = 3
-                                        
-    #                             expStr = leaf[0].strip('+').strip('\x07')
-                                
-    #                             for match in (expMatchStrings+yearStrings):
-    #                                 expStr = expStr.replace(match,"")
-                                    
-    #                                 #If expStr contains only digit
-    #                                 try:
-    #                                     years = float(expStr)
-    #                                 except:
-    #                                     try:
-    #                                         # If expStr is string which can be converted into number
-    #                                         years = w2n.word_to_num(expStr)
-    #                                     except:
-    #                                         # try to remove all non-numeric characters from string except dot
-    #                                         non_decimal = re.compile(r'[^\d.]+')
-    #                                         expStr=non_decimal.sub("", expStr)
-    #                                         try:
-    #                                             years = float(expStr)
-    #                                         except Exception as e:
-    #                                             years = 0
-    #                                             print(e)
-                            
-    #                                 if years>0 and years < 30:
-    #                                     # experience_df = experience_df.append({'Type': expType, 'Years': years,
-    #                                     #  'Months': 0, 'Location': pos},ignore_index=True)
-    #                                     experience_df.loc[experience_df.shape[0]] = [expType, years, 0, pos]
-                                                                                
+                           
             if not experience_df.empty:
                 #experience_df = experience_df.sort_values(['Type', 'Years','Location'], ascending=[True, False, True])
                 experience_df = experience_df.sort_values([ 'Years'], ascending=[False])
