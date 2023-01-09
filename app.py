@@ -18,7 +18,7 @@ app = Flask(__name__)
 # app.config.from_object(__name__) # load config from this file , flaskr.py
 
 @app.route('/job/kw', methods=['POST'])
-def asearch():
+def job_kw():
     input_data = request.json
     print("input data:",input_data)
     if (input_data == None):
@@ -40,6 +40,10 @@ def asearch():
         print("skillsets:",jd_skillsets)
         return jsonify(jd_skillsets)
     except Exception as e: return "Invalid input: " + e.__str__()
+
+@app.route('/user/kw', methods=['POST'])
+def user_kw():
+    ## TODO
 
 @app.route('/results', methods=['POST'])
 def res():
