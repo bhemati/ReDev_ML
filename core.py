@@ -9,10 +9,10 @@ import extractEntities as entity
 from gensim.summarization.summarizer import summarize
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-import PyPDF2
+# import PyPDF2
 import getCategoryJ as skills
 from extract_expJ import ExtractExpJ
-from striprtf.striprtf import rtf_to_text
+# from striprtf.striprtf import rtf_to_text
 from pathlib import Path
 import pandas as pd
 import json

@@ -12,7 +12,7 @@ from sklearn.neighbors import NearestNeighbors
 # from werkzeug.utils import secure_filename
 
 import pdf2txt as pdf
-import PyPDF2
+# import PyPDF2
 
 
 from autocorrect import spell

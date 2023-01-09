@@ -2,7 +2,7 @@
 import os
 from spacy.matcher import Matcher
 import spacy
-nlp = spacy.load("en_core_web_sm")
+nlp = spacy.load("en_core_web_lg")
 
 def get_degree_jd(edu_info):
     if edu_info == None:
