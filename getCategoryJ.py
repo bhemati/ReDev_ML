@@ -1,49 +1,62 @@
 
-def programmingScore(resume, jdTxt, progWords = None):
-    skill_weightage = 40
+import os
+from spacy.matcher import Matcher
+import spacy
+nlp = spacy.load("en_core_web_sm")
+
+def get_degree_jd(edu_info):
+    if edu_info == None:
+        return None
+    matcher = Matcher(nlp.vocab)
+    patterns_bach = [
+        [{"LOWER": "bachelor"}, {"IS_PUNCT": True}, {"LOWER": "s"}],
+        [{"LOWER": "bachelors"}],
+        [{"LOWER": "bachelor"}],
+        [{"LOWER": "b"}, {"IS_PUNCT": True}, {"LOWER": "sc"}],
+        [{"LOWER": "bs"}],
+        [{"LOWER": "bsc"}]
+        ]
+    patterns_mast = [
+        [{"LOWER": "master"}, {"IS_PUNCT": True}, {"LOWER": "s"}],
+        [{"LOWER": "masters"}],
+        [{"LOWER": "master"}],
+        [{"LOWER": "m"}, {"IS_PUNCT": True}, {"LOWER": "sc"}, {"IS_PUNCT": True}],
+        [{"LOWER": "ms"}],
+        [{"LOWER": "msc"}]
+        ]
+    matcher.add("Bachelor", patterns_bach)
+    matcher.add("Master", patterns_mast)
+    doc = nlp(edu_info)
+    matches = matcher(doc)
+    sents = ""
+    if matches != None:
+        for match_id, start, end in matches:
+            string_id = nlp.vocab.strings[match_id]  # Get string representation
+            span = doc[start:end]  # The matched span
+            sents += span.sent.text
+            # print(match_id, string_id, start, end, span.text, sents)
+        return sents
+    return None
+
+def eduScore(resume_edu, jd_edu, skill_weightage = 15):
+    # resumeCorpus = [x.lower() for x in resumeCorpus if isinstance(x, str)]
+    # jdSkillMatched = [x.lower() for x in jd if isinstance(x, str)]
+    # list1 = jdSkillMatched
+    # list2 = resumeCorpus
+    # results = {}
+    # for i in list1:
+    #     results[i] = list2.count(i) 
+    doc1 = nlp(resume_edu)
+    doc2 = nlp(jd_edu)
+    return ((doc1.similarity(doc2)) * skill_weightage)
+
+def programmingScore(resume, jdss, progWords = None, skill_weightage = 40):
+    # skill_weightage = 40
     skill_threshold = 5
-    fout = open("results.tex", "a")
-    fout.write("\\textbf{Programming Languages:} \\\\\n")
-    
-    if(progWords == None):
-        programming = ["android", "assembly", "bash", " c " "c++", "c#", "coffeescript", "emacs lisp",
-         "go!", "groovy", "haskell", "java", "javascript", "kotlin", "matlab", "max MSP", "objective c", 
-         "perl", "php","html", "xml", "css", "processing", "python", "ruby", "sml", "swift", 
-         "latex" "unity", "unix" "visual basic" "wolfram language", "xquery", "sql", "node.js", 
-         "scala", "kdb", "jquery", "mongodb", "CMMI", "ISO", "finance", "Banking", "Finacle", "Oracle Flexcube", "Fiserv", 
-         "TCS BaNcs", "FIS Profile"]
-    else:
-        programming = progWords
-    programmingTotal = 0
-    
-    jdSkillCount = 0
-    jdSkillMatched = []
-    for i in range(len(programming)):
-        if programming[i].lower() in jdTxt.lower() != -1:
-            jdSkillCount += 1
-            jdSkillMatched.append(programming[i].lower())
-    #print("jdSkillCount", jdSkillCount)
-    #for x in range(len(jdSkillMatched)): 
-    #print("jd Skills matched are ",jdSkillMatched)
-    #END 
-    
-    individualSkillWeightage = 0
-    
-    if( jdSkillCount > 0):
-        individualSkillWeightage = skill_weightage/jdSkillCount
-    
-    ResumeProgrammingSkillsMatchedWithJD = []
-    for i in range(len(jdSkillMatched)):
-        if jdSkillMatched[i].lower() in resume.lower() != -1:
-            programmingTotal += 1
-            ResumeProgrammingSkillsMatchedWithJD.append(jdSkillMatched[i].lower())
-            if not("#" in jdSkillMatched[i]):
-                fout.write(jdSkillMatched[i]+", ")
-    #print("Resume skills matched with JD are ", ResumeProgrammingSkillsMatchedWithJD)
-    #print("programming total is ", programmingTotal)
-    
+    # fout = open("results.tex", "a")
+ 
    # My Code 
-    resumeCorpus = resume.split()
+    """resumeCorpus = resume.split()
     resumeCorpus = [x.lower() for x in resumeCorpus if isinstance(x, str)]
     jdSkillMatched = [x.lower() for x in jdSkillMatched if isinstance(x, str)]
     list1 = jdSkillMatched
@@ -51,101 +64,109 @@ def programmingScore(resume, jdTxt, progWords = None):
     results = {}
     for i in list1:
         results[i] = list2.count(i) 
-    
+    """
     #print("Dictionary is ",results)
     
    #end of code
-   
-    constantValue = (individualSkillWeightage/skill_threshold)
+    
+    jdSkillMatched = []
+    if isinstance(resume, str):
+        resume = [x.lower() for x in resume if isinstance(x, str)]
+    if isinstance(jdss, str):
+        jdss = [x.lower() for x in jdSkillMatched if isinstance(x, str)]
+    jdSkillMatched = jdss.intersection(resume)
+    jdSkillCount = len(jdSkillMatched)
+    if( jdSkillCount > 0):
+        individualSkillWeightage = skill_weightage/jdSkillCount
+    # list1 = jdSkillMatched
+    # list2 = resumeCorpus
+    # results = {}
+    # for i in list1:
+    #     results[i] = list2.count(i)  
+    # constantValue = (individualSkillWeightage/skill_threshold)
     # Updating Dictionary
-    results.update({n: constantValue * results[n] for n in results.keys()})
+    # results.update({n: constantValue * results[n] for n in results.keys()})
     #print("updated dict is ", results)
+    print("Required Skills: ", jdss)
+    print("Matched Skills: ", jdSkillMatched)
+    pct_match = round(len(jdSkillMatched) / len(jdss) * 100, 0)
+    # TotalScore = sum(results.values())
 
-    TotalScore = sum(results.values())
     #print("Score is ", TotalScore)
 
-    fout.close()
+    # fout.close()
 
     #progScore = min(programmingTotal/10.0, 1) * 5.0
 
 
-    return TotalScore
+    return (pct_match*skill_weightage)/100
 
-def NonTechnicalSkillScore(resume, jd_txt, progWords = None):
+def NonTechnicalSkillScore(interests, jdss, progWords = None):
     skill_weightage = 0
     skill_threshold = 5
-    fout = open("results.tex", "a")
-    fout.write("\\textbf{Programming Languages:} \\\\\n")
-    
-    if(progWords == None):
-        NonTechnicalSkill = ["Self-directed learning", "Collaboration", "Communication", "Resilience", "Big-picture mindset", "Prioritization ", "Creativity ",
-         "creative", "Insight", "curiosity", "curious", "Openness", "Teamwork", "Time management", "Emotional intelligence", 
-         "quick learner", "problem solver","Customer-service skills", "Planning and organizing", "innovative", "Thinking innovatively and creatively", "Resourceful", "Flexible", "Able to manage own time", "Having self-esteem", 
-         "Innovation skills", "Enterprise skills", "Civic or citizenship knowledge and skills", "Sociability", "Self-management", "Integrity", "Honesty", "Human resources", 
-         "Participates as a team member", "Works with diversity", "Exercises leadership", "leadership", "Exercises leadership", "Monitors and corrects performance", "Understands systems"]
-    else:
-        NonTechnicalSkill = progWords
-    programmingTotal = 0
-    
-    # ADDED BY SAURABH for extracting JD skills is *WORKING* 
-    jdSkillCount = 0
-    jdSkillMatched = []
-    for i in range(len(NonTechnicalSkill)):
-        if NonTechnicalSkill[i].lower() in jd_txt.lower() != -1:
-            jdSkillCount += 1
-            jdSkillMatched.append(NonTechnicalSkill[i].lower())
-    #print("jdSkillCount", jdSkillCount)
-    #for x in range(len(jdSkillMatched)): 
-    #print("jd Skills matched are ",jdSkillMatched)
-    #END 
-    if (jdSkillCount > 0):
-        individualSkillWeightage = skill_weightage/jdSkillCount
-    else :
-        individualSkillWeightage = 0
+    # fout = open("results.tex", "a")
 
-    ResumeProgrammingSkillsMatchedWithJD = []
-    for i in range(len(jdSkillMatched)):
-        if jdSkillMatched[i].lower() in resume.lower() != -1:
-            programmingTotal += 1
-            ResumeProgrammingSkillsMatchedWithJD.append(jdSkillMatched[i].lower())
-            if not("#" in jdSkillMatched[i]):
-                fout.write(jdSkillMatched[i]+", ")
-    #print("Resume skills matched with JD are ", ResumeProgrammingSkillsMatchedWithJD)
-    #print("Non Technical skill total is ", programmingTotal)
-    
    # My Code 
-    resumeCorpus = resume.split()
-    """ Modify below """
-    resumeCorpus = resumeCorpus + ResumeProgrammingSkillsMatchedWithJD
-    resumeCorpus = [x.lower() for x in resumeCorpus if isinstance(x, str)]
-    jdSkillMatched = [x.lower() for x in jdSkillMatched if isinstance(x, str)]
-    #print(type(resumeCorpus))
-    print("jd skills matched in lower case",jdSkillMatched)
-    list1 = jdSkillMatched
-    list2 = resumeCorpus
-    results = {}
-    for i in list1:
-        if list2.count(i) > skill_threshold:
-           results[i] = skill_threshold
-        else:
-           results[i] = list2.count(i)
+#     resumeCorpus = resume.split()
+#     """ Modify below """
+#     resumeCorpus = resumeCorpus + ResumeProgrammingSkillsMatchedWithJD
+#     resumeCorpus = [x.lower() for x in resumeCorpus if isinstance(x, str)]
+#     jdSkillMatched = [x.lower() for x in jdSkillMatched if isinstance(x, str)]
+#     #print(type(resumeCorpus))
+#     print("jd non-tech skills matched in lower case",jdSkillMatched)
+#     list1 = jdSkillMatched
+#     list2 = resumeCorpus
+#     results = {}
+#     for i in list1:
+#         if list2.count(i) > skill_threshold:
+#            results[i] = skill_threshold
+#         else:
+#            results[i] = list2.count(i)
 		
-    #print("Relevant non-technical skills and their count in resume as per the JD are below")
-    print("Dictionary from resume is ",results)
-    #print(type(results))
-   #end of code
+#     #print("Relevant non-technical skills and their count in resume as per the JD are below")
+#     print("Dictionary from resume is ",results)
+#     #print(type(results))
+#    #end of code
    
-    constantValue = (individualSkillWeightage/skill_threshold)
-    # Updating Dictionary
-    results.update({n: constantValue * results[n] for n in results.keys()})
-    print("updated dict is ", results)
+#     constantValue = (individualSkillWeightage/skill_threshold)
+#     # Updating Dictionary
+#     results.update({n: constantValue * results[n] for n in results.keys()})
+#     print("updated dict is ", results)
 
-    TotalScore = sum(results.values())
-    print("Score is ", TotalScore)
+#     TotalScore = sum(results.values())
+#     print("Score is ", TotalScore)
 
-    fout.close()
+    # fout.close()
+
+    #progScore = min(programmingTotal/10.0, 1) * 5.0
+
+    jdSkillMatched = []
+    jdSkillMatched = jdss.intersection(interests)
+    jdSkillCount = len(jdSkillMatched)
+    if( jdSkillCount > 0):
+        individualSkillWeightage = skill_weightage/jdSkillCount
+    
+    # print("Required Skills: ", jdss)
+    print("Matched Interests: ", jdSkillMatched)
+    pct_match = round(len(jdSkillMatched) / len(jdss) * 100, 0)
+    # TotalScore = sum(results.values())
+
+    #print("Score is ", TotalScore)
+
+    # fout.close()
 
     #progScore = min(programmingTotal/10.0, 1) * 5.0
 
 
-    return TotalScore
+    return (pct_match*skill_weightage)/100
+    # return TotalScore
+def rankEducation(jd_edu, res_edu):
+    pass
+def deleteResults():
+    try:
+        if os.path.exists("results.tex"):
+            os.remove("results.tex")
+        else:
+            print("The file does not exist")
+    except Exception as e:
+        print(e)

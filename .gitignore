@@ -1,0 +1,13 @@
+__pycache__/
+.vscode/
+ml-repo/
+node_modules/
+p38-test/
+.dockerignore
+*.pyc
+*.log
+*.bak.*
+*.bak
+*.yml
+Dockerfile
+test.ipynb

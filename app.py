@@ -3,96 +3,84 @@ import os
 import warnings
 # # from flask import (Flask,session,flash, redirect, render_template, request,
 #                 #    url_for, send_from_directory)
+from flask import Flask, request, jsonify
 import core
 import search
 import pandas as pd
 import json
-
+import urllib.request
+import spacy
+from spacy.pipeline import EntityRuler
 # warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 
-# app = Flask(__name__)
+app = Flask(__name__)
 
 # app.config.from_object(__name__) # load config from this file , flaskr.py
 
-# # Load default config and override config from an environment variable
-# app.config.update(dict(
-#     USERNAME='admin',
-#     PASSWORD='admin',
-#     SECRET_KEY='development key',
-# ))
-
-
-# app.config['UPLOAD_FOLDER'] = 'Upload-Resume'
-# app.config['UPLOAD_JD_FOLDER'] = 'Upload-JD'
-# app.config['ALLOWED_EXTENSIONS'] = set(['txt', 'pdf', 'doc', 'docx'])
-
-# class jd:
-#     def __init__(self, name):
-#         self.name = name
-
-# def getfilepath(loc):
-#     temp = str(loc).split('\\')
-#     return temp[-1]
+@app.route('/job/kw', methods=['POST'])
+def asearch():
+    input_data = request.json
+    print("input data:",input_data)
+    if (input_data == None):
+        exit("Bad Input Data")
+    try:
+        with urllib.request.urlopen(input_data['job']) as url:
+            data_jd = json.load(url)
     
+        nlp = spacy.load("skillset")
+        search_st = data_jd['description'] + data_jd['responsibilities'] +data_jd['requirements']
 
+        def create_skill_set(doc):
+            '''Create a set of the extracted skill entities of a doc'''
+            
+            return set([ent.label_.lower().replace('-', '_')[6:] for ent in doc.ents if 'skill' in ent.label_.lower()])
 
+        jd_skillsets = list(create_skill_set(nlp(search_st)))
+        js_skillsets = []
+        print("skillsets:",jd_skillsets)
+        return jsonify(jd_skillsets)
+    except Exception as e: return "Invalid input: " + e.__str__()
 
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     error = None
-#     if request.method == 'POST':
-#         if request.form['username'] != app.config['USERNAME']:
-#             error = 'Invalid username'
-#         elif request.form['password'] != app.config['PASSWORD']:
-#             error = 'Invalid password'
-#         else:
-#             session['logged_in'] = True
-#             flash('You were logged in')
-#             return redirect(url_for('home'))
-#     return render_template('login.html', error=error)
-
-# @app.route('/logout')
-# def logout():
-#     session.pop('logged_in', None)
-#     flash('You were logged out')
-#     return redirect(url_for('home'))
-
-
-# @app.route('/')
-# def home():
-     
-#     return render_template('index.html')
-
-# """
-# @app.route( '/stream' )
-# def stream():
-#     g = proc.Group()
-#     p = g.run( [ "bash", "-c", "for ((i=0;i<100;i=i+1)); do echo $i; sleep 1; done" ] )
-
-#     def read_process():
-#         while g.is_pending():
-#             lines = g.readlines()
-#             for proc, line in lines:
-#                 yield line
-
-#     return flask.Response( read_process(), mimetype= 'text/plain' )
-# """
-# @app.route('/results', methods=['GET', 'POST'])
-# def res():
-#     if request.method == 'POST':
-#         os.chdir(app.config['UPLOAD_JD_FOLDER'])
-#         file = glob.glob('*.xlsx', recursive=False)
-#         data_set = pd.read_excel(file[0])
-#         search_st = data_set['High Level Job Description'][0]
-#         skill_text = data_set['Technology'][0] + data_set['Primary Skill'][0]
-#         jd_exp = data_set['Yrs Of Exp '][0]
-#         title = data_set['Job Title'][0]
-#         flask_return = core.res(search_st,skill_text,jd_exp)
-#         df = pd.DataFrame(columns=['Title','Experience','Primary Skill','Technology'])
-#         # df = df.append({'Title': title,'Experience':jd_exp,'Primary Skill':data_set['Primary Skill'][0],'Technology':data_set['Technology'][0]}, ignore_index=True)
-#         df.loc[df.shape[0]] = [title, jd_exp, data_set['Primary Skill'][0], data_set['Technology'][0]]
-#         return render_template('result.html', results = flask_return,jd = df)
-
+@app.route('/results', methods=['POST'])
+def res():
+    # os.chdir('Upload-JD')
+    # with open("job2.json") as json_data:
+    #     data_jd = json.load(json_data)
+    ####### TODO
+    ## Get input the same way that its on postman, the links will come as 'job' and 'applicants'
+    input_data = request.json
+    data_jd={}
+    print("input data:",input_data)
+    if (input_data == None):
+        exit("Bad Input Data")
+    try:
+        with urllib.request.urlopen(input_data['job']) as url:
+            data_jd = json.load(url)
+    except Exception as e: print(e)
+    # print("job: ",data_jd)
+    search_st = data_jd['description'] + data_jd['responsibilities']
+    # print("search_st: ",search_st)
+    # print("search_St", search_st)
+    skill_text =  data_jd['requirements']
+    # print("skill_text", skill_text)
+    jd_exp = "3"
+    title = data_jd['title']
+    resume_link = input_data['applicants']
+    flask_return = core.res(search_st,skill_text,jd_exp, resume_link)
+    # ret = jsonify(flask_return)
+    # with open('json_data.json', 'w') as outfile:
+    #     outfile.truncate(0)
+    # for r in flask_return:
+    #     # json_object = json.dumps(r.__dict__, indent = 4)
+    #     # print(json_object)
+    #     with open('json_data.json', 'a') as outfile:
+    #         json.dump(r.__dict__, outfile)
+    #         outfile.write(",")
+    #         outfile.write("\n")
+    flask_return_list = [r.copy() for r in flask_return]
+    flask_return_json = jsonify(flask_return_list)
+    
+    return flask_return_json
 # @app.route('/uploadResume', methods=['GET', 'POST'])
 # def uploadResume():
 #     return render_template('uploadresume.html')
@@ -178,27 +166,29 @@ import json
 
 
 if __name__ == '__main__':
-    # app.run(debug = True) 
-    # app.run('127.0.0.1' , 5000 , debug=True)
-    # app.run('0.0.0.0' , 5000 , debug=True , threaded=True)
-    os.chdir('Upload-JD')
-    file = glob.glob('*.xlsx', recursive=False)
-    data_set = pd.read_excel(file[0], engine='openpyxl')
-    search_st = data_set['High Level Job Description'][0]
-    skill_text = data_set['Technology'][0] + data_set['Primary Skill'][0]
-    jd_exp = data_set['Yrs Of Exp '][0]
-    title = data_set['Job Title'][0]
-    flask_return = core.res(search_st,skill_text,jd_exp)
-    df = pd.DataFrame(columns=['Title','Experience','Primary Skill','Technology'])
-    # df = df.append({'Title': title,'Experience':jd_exp,'Primary Skill':data_set['Primary Skill'][0],'Technology':data_set['Technology'][0]}, ignore_index=True)
-    df.loc[df.shape[0]] = [title, jd_exp, data_set['Primary Skill'][0], data_set['Technology'][0]]
-    with open('json_data.json', 'w') as outfile:
-        outfile.truncate(0)
-    for r in flask_return:
-        # json_object = json.dumps(r.__dict__, indent = 4)
-        # print(json_object)
-        with open('json_data.json', 'a') as outfile:
-            json.dump(r.__dict__, outfile)
-            outfile.write("\n")
+    app.run('0.0.0.0', 5001, debug = True) 
+    # app.run('127.0.0.1' , 5001 , debug=True)
+    # app.run('0.0.0.0' , 5001 , debug=True )
+    # os.chdir('Upload-JD')
+    # file = glob.glob('*.xlsx', recursive=False)
+    # data_set = pd.read_excel(file[0], engine='openpyxl')
+    # with open("job.json") as json_data:
+    #     data_jd = json.load(json_data)
+    # search_st = data_jd['description']
+    # skill_text = data_jd['responsibilities'] + data_jd['requirements']
+    # jd_exp = "3"
+    # title = data_jd['title']
+    # flask_return = core.res(search_st,skill_text,jd_exp)
+    # # df = pd.DataFrame(columns=['Title','Experience','Primary Skill','Technology'])
+    # # df = df.append({'Title': title,'Experience':jd_exp,'Primary Skill':data_set['Primary Skill'][0],'Technology':data_set['Technology'][0]}, ignore_index=True)
+    # # df.loc[df.shape[0]] = [title, jd_exp, data_jd['Primary Skill'][0], data_jd['Technology'][0]]
+    # with open('json_data.json', 'w') as outfile:
+    #     outfile.truncate(0)
+    # for r in flask_return:
+    #     # json_object = json.dumps(r.__dict__, indent = 4)
+    #     # print(json_object)
+    #     with open('json_data.json', 'a') as outfile:
+    #         json.dump(r.__dict__, outfile)
+    #         outfile.write("\n")
     # return render_template('result.html', results = flask_return,jd = df)
     
