@@ -43,7 +43,8 @@ def job_kw():
 
 @app.route('/user/kw', methods=['POST'])
 def user_kw():
-    ## TODO
+    return "user kw"
+
 
 @app.route('/results', methods=['POST'])
 def res():

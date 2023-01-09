@@ -91,7 +91,7 @@ def res(jobfile,skillset,jd_exp, resume_input_link):
 
     PROJECT_DIR = os.path.dirname(os.getcwd()) + '/'
     skill_pattern_path = "skill_patterns.jsonl"
-    nlp = spacy.load("en_core_web_sm")
+    nlp = spacy.load("skillset")
     resume_text = jobfile+skillset
     def add_newruler_to_pipeline(skill_pattern_path):
         '''Reads in all created patterns from a JSONL file and adds it to the pipeline after PARSER and before NER'''
@@ -103,7 +103,7 @@ def res(jobfile,skillset,jd_exp, resume_input_link):
         return set([ent.label_.upper()[6:] for ent in doc.ents if 'skill' in ent.label_.lower()])
 
     
-    add_newruler_to_pipeline(skill_pattern_path)
+    # add_newruler_to_pipeline(skill_pattern_path)
     jd_skillsets = create_skill_set(nlp(resume_text))
     print("skillsets:",jd_skillsets)
     jd_degree_required = skills.get_degree_jd(skillset)
