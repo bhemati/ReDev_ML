@@ -11,6 +11,8 @@ import json
 import urllib.request
 import spacy
 from spacy.pipeline import EntityRuler
+import re
+import string
 # warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 
 app = Flask(__name__)
@@ -36,14 +38,37 @@ def job_kw():
             return set([ent.label_.lower().replace('-', '_')[6:] for ent in doc.ents if 'skill' in ent.label_.lower()])
 
         jd_skillsets = list(create_skill_set(nlp(search_st)))
-        js_skillsets = []
+        
         print("skillsets:",jd_skillsets)
         return jsonify(jd_skillsets)
     except Exception as e: return "Invalid input: " + e.__str__()
 
 @app.route('/user/kw', methods=['POST'])
 def user_kw():
-    return "user kw"
+    input_data = request.json
+    print("input data:",input_data)
+    if (input_data == None):
+        exit("Bad Input Data")
+    try:
+        with urllib.request.urlopen(input_data['applicant']) as url:
+            data_res = json.load(url)
+        nlp = spacy.load("skillset")
+        exp_list = [x["description"] for x in data_res["experiences"] if data_res["experiences"]]
+        exp_text = " | ".join(exp_list)
+        def create_skill_set(doc):
+            '''Create a set of the extracted skill entities of a doc'''
+            
+            return set([ent.label_.lower().replace('-', '_')[6:] for ent in doc.ents if 'skill' in ent.label_.lower()])
+
+        exp_skillsets = list(create_skill_set(nlp(exp_text)))
+        edu_list = [x["field"] for x in data_res["educations"] if data_res["educations"]]
+        skills = [x["title"] for x in data_res["skills"]]
+        res_skillsets = skills + edu_list + exp_skillsets
+        translator = re.compile('[%s]' % re.escape(string.punctuation))
+        res_ret = [translator.sub(' ', x.lower()) for x in res_skillsets]
+        res_ret = [re.sub(' +','_', x).strip() for x in res_ret]
+        return jsonify(res_ret)
+    except Exception as e: return "Invalid input: " + e.__str__()
 
 
 @app.route('/results', methods=['POST'])
