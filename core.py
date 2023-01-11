@@ -191,7 +191,7 @@ def res(jobfile,skillset,jd_exp, resume_input_link):
                     print(e)
             else:
                 ass_score = 0.0
-            if(len(temp_phone) == 0):
+            if(temp_phone is None or len(temp_phone) == 0 ):
                 phone_no = not_found
                 Resume_phoneNo_vector.append(phone_no)
             else:
