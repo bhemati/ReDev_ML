@@ -108,7 +108,9 @@ def res():
     #         outfile.write(",")
     #         outfile.write("\n")
     flask_return_list = [r.copy() for r in flask_return]
-    flask_return_json = jsonify(flask_return_list)
+    flask_return_sort = sorted(flask_return_list, key=lambda x : x['finalRank'], reverse=True)
+    
+    flask_return_json = jsonify(flask_return_sort)
     
     return flask_return_json
 # @app.route('/uploadResume', methods=['GET', 'POST'])
