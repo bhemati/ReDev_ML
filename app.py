@@ -13,6 +13,7 @@ import spacy
 from spacy.pipeline import EntityRuler
 import re
 import string
+import openai
 # warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 
 app = Flask(__name__)
@@ -70,7 +71,37 @@ def user_kw():
         return jsonify(res_ret)
     except Exception as e: return "Invalid input: " + e.__str__()
 
-
+@app.route('/skill/suggesstion', methods=['POST'])
+def skill_suggestion():
+    input_data = request.json
+    print("input data:",input_data)
+    if (input_data == None):
+        exit("Bad Input Data")
+    try:
+        job_title = input_data['keyword']
+    except Exception as e: return "Invalid input: " + e.__str__()
+    try:
+        openai.api_key = "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"
+    except Exception as e: return "API Problem: " + e.__str__()
+    try:
+        question = "10 top main skill keywords for " + job_title
+        res = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=question,
+        max_tokens=64,
+        temperature=0
+        )
+        b = res['choices'][0]['text']
+        c = b.split('\n')
+        skills = []
+        for x in c:
+            idx = re.search(r'[a-z]+', x, flags=re.IGNORECASE)
+            if idx:
+                idx = idx.span()[0]
+                skill = x[idx:]
+                skills.append(skill)
+        return jsonify(skills)
+    except Exception as e: return "API Problem: " + e.__str__()
 @app.route('/results', methods=['POST'])
 def res():
     # os.chdir('Upload-JD')
