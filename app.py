@@ -14,6 +14,8 @@ from spacy.pipeline import EntityRuler
 import re
 import string
 import openai
+from time import sleep
+
 # warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 
 app = Flask(__name__)
@@ -77,9 +79,10 @@ def skill_suggestion():
     print("input data:",input_data)
     if (input_data == None):
         exit("Bad Input Data")
-    try:
-        job_title = input_data['keyword']
-    except Exception as e: return "Invalid input: " + e.__str__()
+    # try:
+    #     job_title = input_data['keyword']
+    # except Exception as e: return "Invalid input: " + e.__str__()
+    job_title = input_data.get('keyword')
     try:
         openai.api_key = "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"
     except Exception as e: return "API Problem: " + e.__str__()
@@ -102,6 +105,81 @@ def skill_suggestion():
                 skills.append(skill)
         return jsonify(skills)
     except Exception as e: return "API Problem: " + e.__str__()
+
+@app.route('/job/desc_gen', methods=['POST'])
+def jd_generator():
+    input_data = request.json
+    print("input data:",input_data)
+    if (input_data == None):
+        exit("Bad Input Data")
+    job_title = input_data.get('job_title')
+    emp_type = input_data.get('employment_type')
+    env_type = input_data.get('environment_type')
+    exp_level = input_data.get('experience_level')
+    job_langs = input_data.get('languages')
+    job_location = input_data.get('location')
+    job_skills = input_data.get('skills')
+    job_salary = input_data.get('salary')
+    try:
+        openai.api_key = "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"
+    except Exception as e: return "API Problem: " + e.__str__()
+    question =  "Job description, responsibilites, requirements, benefits of {} {} {} {}" \
+        "knowing languages {} located in {} knowing following skills {} with gross salary {} per {}\n".format(
+    job_title, exp_level, env_type, emp_type, ", ".join(job_langs), job_location, ", ".join(job_skills),\
+         job_salary[0], job_salary[1]
+    )
+    print("prompt: ", question)
+    sleep_time = 2
+    num_retries = 10
+    ## Try 10 times to get answer from GPT
+    for x in range(0, num_retries): 
+        try:
+            res = openai.Completion.create(
+            model="text-davinci-003",
+            prompt=question,
+            temperature=0,
+            max_tokens=2048,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0,
+            )
+            str_error = None
+        except Exception as e:
+            str_error = str(e)
+
+        if str_error:
+            sleep(sleep_time)  # wait before trying to fetch the data again
+            sleep_time *= 2  # Implement your backoff algorithm here i.e. exponential backoff
+        else:
+            break
+
+    gpt_answer = res['choices'][0]['text']
+    idx1 = re.search('Job Description:',gpt_answer,re.IGNORECASE).span()[1]
+    idx2 = re.search('Responsibilities:',gpt_answer,re.IGNORECASE).span()[0]
+
+    jd = gpt_answer[idx1:idx2].strip()
+
+    idx1 = re.search('Responsibilities:',gpt_answer,re.IGNORECASE).span()[1]
+    idx2 = re.search('Requirements:',gpt_answer,re.IGNORECASE).span()[0]
+
+    resp = gpt_answer[idx1:idx2].strip()
+
+    idx1 = re.search('Requirements:',gpt_answer,re.IGNORECASE).span()[1]
+    idx2 = re.search('Benefits:',gpt_answer,re.IGNORECASE).span()[0]
+
+    req = gpt_answer[idx1:idx2].strip()
+
+    idx1 = re.search('Benefits:',gpt_answer,re.IGNORECASE).span()[1]
+
+    benf = gpt_answer[idx1:].strip()
+    gpt_return = {
+        'Job Description': jd,
+        'Responsibilites': resp,
+        'Requirements': req,
+        'Benefits': benf
+    }
+    return jsonify(gpt_return)
+
 @app.route('/results', methods=['POST'])
 def res():
     # os.chdir('Upload-JD')
