@@ -73,7 +73,7 @@ def user_kw():
         return jsonify(res_ret)
     except Exception as e: return "Invalid input: " + e.__str__()
 
-@app.route('/skill/suggesstion', methods=['POST'])
+@app.route('/skill/suggestion', methods=['POST'])
 def skill_suggestion():
     input_data = request.json
     print("input data:",input_data)
@@ -92,7 +92,8 @@ def skill_suggestion():
         model="text-davinci-003",
         prompt=question,
         max_tokens=64,
-        temperature=0
+        temperature=0,
+        stop=["11."]
         )
         b = res['choices'][0]['text']
         c = b.split('\n')
@@ -124,10 +125,11 @@ def jd_generator():
         openai.api_key = "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"
     except Exception as e: return "API Problem: " + e.__str__()
     question =  "Job description, responsibilites, requirements, benefits of {} {} {} {}" \
-        "knowing languages {} located in {} knowing following skills {} with gross salary {} per {}\n".format(
-    job_title, exp_level, env_type, emp_type, ", ".join(job_langs), job_location, ", ".join(job_skills),\
-         job_salary[0], job_salary[1]
+        "knowing languages {} located in {} knowing following skills {} ".format(
+    job_title, exp_level, env_type, emp_type, ", ".join(job_langs), job_location, ", ".join(job_skills)
     )
+    if job_salary:
+        question = question + "with gross salary {} per {}\n".format(job_salary[0], job_salary[1])
     print("prompt: ", question)
     sleep_time = 2
     num_retries = 10
@@ -149,36 +151,40 @@ def jd_generator():
 
         if str_error:
             sleep(sleep_time)  # wait before trying to fetch the data again
-            sleep_time *= 2  # Implement your backoff algorithm here i.e. exponential backoff
+            sleep_time *= 2 
         else:
             break
+    try:
+        gpt_answer = res['choices'][0]['text']
+        idx1 = re.search('Job Description:',gpt_answer,re.IGNORECASE).span()[1]
+        idx2 = re.search('Responsibilities:',gpt_answer,re.IGNORECASE).span()[0]
 
-    gpt_answer = res['choices'][0]['text']
-    idx1 = re.search('Job Description:',gpt_answer,re.IGNORECASE).span()[1]
-    idx2 = re.search('Responsibilities:',gpt_answer,re.IGNORECASE).span()[0]
+        jd = gpt_answer[idx1:idx2].strip()
 
-    jd = gpt_answer[idx1:idx2].strip()
+        idx1 = re.search('Responsibilities:',gpt_answer,re.IGNORECASE).span()[1]
+        idx2 = re.search('Requirements:',gpt_answer,re.IGNORECASE).span()[0]
 
-    idx1 = re.search('Responsibilities:',gpt_answer,re.IGNORECASE).span()[1]
-    idx2 = re.search('Requirements:',gpt_answer,re.IGNORECASE).span()[0]
+        resp = gpt_answer[idx1:idx2].strip()
 
-    resp = gpt_answer[idx1:idx2].strip()
+        idx1 = re.search('Requirements:',gpt_answer,re.IGNORECASE).span()[1]
+        idx2 = re.search('Benefits:',gpt_answer,re.IGNORECASE).span()[0]
 
-    idx1 = re.search('Requirements:',gpt_answer,re.IGNORECASE).span()[1]
-    idx2 = re.search('Benefits:',gpt_answer,re.IGNORECASE).span()[0]
+        req = gpt_answer[idx1:idx2].strip()
 
-    req = gpt_answer[idx1:idx2].strip()
+        idx1 = re.search('Benefits:',gpt_answer,re.IGNORECASE).span()[1]
 
-    idx1 = re.search('Benefits:',gpt_answer,re.IGNORECASE).span()[1]
-
-    benf = gpt_answer[idx1:].strip()
-    gpt_return = {
-        'Job Description': jd,
-        'Responsibilites': resp,
-        'Requirements': req,
-        'Benefits': benf
-    }
-    return jsonify(gpt_return)
+        benf = gpt_answer[idx1:].strip()
+        gpt_return = {
+            'description': jd,
+            'responsibilites': resp,
+            'requirements': req,
+            'benefits': benf
+        }
+        return jsonify(gpt_return)
+    except Exception:
+        gpt_answer = res['choices'][0]['text']
+        return gpt_answer
+    
 
 @app.route('/results', methods=['POST'])
 def res():
@@ -307,7 +313,7 @@ def res():
 
 
 if __name__ == '__main__':
-    app.run('localhost', 5001, debug = True) 
+    app.run('0.0.0.0', 5001, debug = True) 
     # app.run('127.0.0.1' , 5001 , debug=True)
     # app.run('0.0.0.0' , 5001 , debug=True )
     # os.chdir('Upload-JD')
