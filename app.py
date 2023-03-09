@@ -83,28 +83,40 @@ def skill_suggestion():
     #     job_title = input_data['keyword']
     # except Exception as e: return "Invalid input: " + e.__str__()
     job_title = input_data.get('keyword')
+    prompts = ["Q: Is \"Professional Actor\" an IT-related job?\nA: No\nQ: Is \"Android Developer\" an IT-related job?\nA: Yes\
+            \nQ: Is \"Formateur technique international\" an IT-related job?\nA: Yes\nQ: Is {} an IT-related job?\nA:".format(job_title)
+    ,'10 top main skill keywords for {}'.format(job_title)]
     try:
         openai.api_key = "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"
     except Exception as e: return "API Problem: " + e.__str__()
     try:
-        question = "10 top main skill keywords for " + job_title
         res = openai.Completion.create(
         model="text-davinci-003",
-        prompt=question,
-        max_tokens=64,
-        temperature=0,
-        stop=["11."]
+        prompt=prompts,
+        max_tokens=512,
+        temperature=0
         )
-        b = res['choices'][0]['text']
-        c = b.split('\n')
-        skills = []
-        for x in c:
-            idx = re.search(r'[a-z]+', x, flags=re.IGNORECASE)
-            if idx:
-                idx = idx.span()[0]
-                skill = x[idx:]
-                skills.append(skill)
-        return jsonify(skills)
+        if 'Yes' in res['choices'][0]['text'].lstrip():
+            b = res['choices'][1]['text']
+            c = b.split('\n')
+            skills = []
+            for x in c:
+                idx = re.search(r'[a-z]+', x, flags=re.IGNORECASE)
+                if idx:
+                    idx = idx.span()[0]
+                    skill = x[idx:]
+                    skill = re.sub("[\(\[].*?[\)\]]", "", skill)
+                    skill = skill.strip()
+                    skills.append(skill)
+            title_skill = {
+                "job_title": job_title,
+                "skills": skills
+            }
+            with open('skills/skill_suggestion.jsonl', 'a') as f:
+                f.write(json.dumps(title_skill) + '\n')
+            return jsonify(skills)
+        else:
+            return 'Non IT-related job'
     except Exception as e: return "API Problem: " + e.__str__()
 
 @app.route('/job/desc_gen', methods=['POST'])
@@ -140,10 +152,7 @@ def jd_generator():
             model="text-davinci-003",
             prompt=question,
             temperature=0,
-            max_tokens=2048,
-            top_p=1,
-            frequency_penalty=0,
-            presence_penalty=0,
+            max_tokens=3096,
             )
             str_error = None
         except Exception as e:
@@ -180,9 +189,21 @@ def jd_generator():
             'requirements': req,
             'benefits': benf
         }
+        job_d = {
+                "job_summary": question,
+                "job_description": gpt_return
+            }
+        with open('job_desc/job_desc_suggestion.jsonl', 'a') as f:
+            f.write(json.dumps(title_skill) + '\n')
         return jsonify(gpt_return)
     except Exception:
         gpt_answer = res['choices'][0]['text']
+        job_d = {
+                "job_summary": question,
+                "job_description": gpt_answer
+            }
+        with open('job_desc/job_desc_suggestion.jsonl', 'a') as f:
+            f.write(json.dumps(job_d) + '\n')
         return gpt_answer
     
 
