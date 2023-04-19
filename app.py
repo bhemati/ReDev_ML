@@ -15,7 +15,7 @@ import re
 import string
 import openai
 from time import sleep
-
+import core2
 # warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 
 app = Flask(__name__)
@@ -136,12 +136,12 @@ def jd_generator():
     try:
         openai.api_key = "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"
     except Exception as e: return "API Problem: " + e.__str__()
-    question =  "Job description, responsibilites, requirements, benefits of {} {} {} {}" \
-        "knowing languages {} located in {} knowing following skills {} ".format(
+    question =  "Job description, responsibilities, requirements, benefits of {} {} {} {}" \
+        " knowing languages {} located in {} knowing following skills {} ".format(
     job_title, exp_level, env_type, emp_type, ", ".join(job_langs), job_location, ", ".join(job_skills)
     )
     if job_salary:
-        question = question + "with gross salary {} per {}\n".format(job_salary[0], job_salary[1])
+        question = question + " with gross salary {} per {}\n".format(job_salary[0], job_salary[1])
     print("prompt: ", question)
     sleep_time = 2
     num_retries = 10
@@ -189,8 +189,17 @@ def jd_generator():
             'requirements': req,
             'benefits': benf
         }
-        job_d = {
-                "job_summary": question,
+        title_skill = {
+                "job_input": {
+                "job_title": job_title,
+                "employment_type": emp_type ,
+                "environment_type": env_type,
+                "experience_level": exp_level,
+                "languages": job_langs,
+                "location": job_location,
+                "skills": job_skills,
+                "salary" : job_salary
+                },
                 "job_description": gpt_return
             }
         with open('job_desc/job_desc_suggestion.jsonl', 'a') as f:
@@ -198,12 +207,21 @@ def jd_generator():
         return jsonify(gpt_return)
     except Exception:
         gpt_answer = res['choices'][0]['text']
-        job_d = {
-                "job_summary": question,
-                "job_description": gpt_answer
+        title_skill = {
+                "job_input": {
+                "job_title": job_title,
+                "employment_type": emp_type ,
+                "environment_type": env_type,
+                "experience_level": exp_level,
+                "languages": job_langs,
+                "location": job_location,
+                "skills": job_skills,
+                "salary" : job_salary
+                },
+                "job_description": gpt_return
             }
         with open('job_desc/job_desc_suggestion.jsonl', 'a') as f:
-            f.write(json.dumps(job_d) + '\n')
+            f.write(json.dumps(title_skill) + '\n')
         return gpt_answer
     
 
@@ -249,88 +267,54 @@ def res():
     flask_return_json = jsonify(flask_return_sort)
     
     return flask_return_json
-# @app.route('/uploadResume', methods=['GET', 'POST'])
-# def uploadResume():
-#     return render_template('uploadresume.html')
 
-# @app.route("/upload", methods=['POST'])
-# def upload_file():
-#     """mydir= os.listdir(app.config['UPLOAD_FOLDER'])
-#     try:
-#         shutil.rmtree(mydir)
-#     except OSError as e:
-#         print ("Error: %s - %s." % (e.filename, e.strerror))"""
-   
-#     print("resume-resume",os.getcwd())
-#     if request.method=='POST' and 'customerfile' in request.files:
-#         for f in request.files.getlist('customerfile'):
-#             f.save(os.path.join(app.config['UPLOAD_FOLDER'], f.filename))
-            
-#         x = os.listdir(app.config['UPLOAD_FOLDER'])
-#         return render_template("resultlist.html", name=x)
+@app.route('/results_test', methods=['POST'])
+def res2():
+    # os.chdir('Upload-JD')
+    # with open("job2.json") as json_data:
+    #     data_jd = json.load(json_data)
+    ####### TODO
+    ## Get input the same way that its on postman, the links will come as 'job' and 'applicants'
+    input_data = request.json
+    data_jd={}
+    print("input data:",input_data)
+    if (input_data == None):
+        exit("Bad Input Data")
+    try:
+        with urllib.request.urlopen(input_data['job']) as url:
+            data_jd = json.load(url)
+    except Exception as e: print(e)
+    # print("job: ",data_jd)
+    search_st = data_jd['description'] + data_jd['responsibilities']
+    # print("search_st: ",search_st)
+    # print("search_St", search_st)
+    skill_text =  data_jd['requirements']
+    # print("skill_text", skill_text)
+    jd_exp = "3"
+    title = data_jd['title']
+    # resume_link = ["https://api.redev.jobs/ml/user/{}".format(x) for x in range(6164, 6901)]
+    flask_return = core2.res(search_st,skill_text,jd_exp)
+    # ret = jsonify(flask_return)
+    # with open('json_data.json', 'w') as outfile:
+    #     outfile.truncate(0)
+    # for r in flask_return:
+    #     # json_object = json.dumps(r.__dict__, indent = 4)
+    #     # print(json_object)
+    #     with open('json_data.json', 'a') as outfile:
+    #         json.dump(r.__dict__, outfile)
+    #         outfile.write(",")
+    #         outfile.write("\n")
+    flask_return_list = [r.copy() for r in flask_return]
+    flask_return_sort = sorted(flask_return_list, key=lambda x : x['finalRank'], reverse=True)
     
-# @app.route('/uploadjdDesc', methods=['GET', 'POST'])
-# def uploadjdDesc():
-#     return render_template('uploadjd.html')
+    flask_return_json = jsonify(flask_return_sort)
+    with open("rank_results/job_{}.json".format(input_data['job'][-2:]), 'w') as file:
+        json.dump(flask_return_sort, file)
+    return "done"
 
-# @app.route("/uploadjd", methods=['POST'])
-# def upload_jd_file():
-    
-#     print("resume-jd",os.getcwd())
-#     if request.method=='POST' and 'customerfile' in request.files:
-#         filelist = [ f for f in os.listdir(app.config['UPLOAD_JD_FOLDER']) if f.endswith(".xlsx") ]
-#         for f in filelist:
-#              os.remove(os.path.join(app.config['UPLOAD_JD_FOLDER'], f))
-        
-#         for f in request.files.getlist('customerfile'):
-#             f.save(os.path.join(app.config['UPLOAD_JD_FOLDER'], f.filename))
-            
-#         x = os.listdir(app.config['UPLOAD_JD_FOLDER'])
-#         return render_template("resultlist.html", name=x)
-		
-# """ single file upload		
-# @app.route("/upload", methods=['POST'])
-# def upload_file():
-    
-#     if request.method=='POST' and 'customerfile' in request.files:
-# 	   for f in request.files.getlist('customerfile'):
-#             f.save(os.path.join(app.config['UPLOAD_FOLDER'], f.filename))
-#         return 'Upload completed.'
-	
-#         file = request.files['customerfile']
-#         if not file:
-#             return "No file"
-#         else:
-#             f = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-#             file.save(f)
-#             flash("Photo saved.")
-#             x = os.listdir(app.config['UPLOAD_FOLDER'])
-#             return render_template("resultlist.html", name=x)
-# """
-# """			
-# @app.route('/resultsearch' ,methods = ['POST', 'GET'])
-# def resultsearch():
-#     if request.method == 'POST':
-#         search_st = request.form.get('Name')
-#         print(search_st)
-#     result = search.res(search_st)
-#     # return result
-#     return render_template('result.html', results = result)
-# """
-# @app.route('/resultsearch' ,methods = ['POST', 'GET'])
-# def resultsearch():
-#     os.chdir(app.config['UPLOAD_JD_FOLDER'])
-#     file = glob.glob('*.xlsx', recursive=False)
-#     data_set = pd.read_excel(file[0])
-#     search_st = data_set['High Level Job Description'][0]
-#     result = search.res(search_st)
-#     # return result
-#     return render_template('result.html', results = result)
-
-# @app.route('/Upload-Resume/<path:filename>')
-# def custom_static(filename):
-#     return send_from_directory('./Upload-Resume', filename)
-
+@app.route('/job/<jobId>/applicant/suggestion/start', defaults={'username': None})
+def show(user_id, username):
+    pass
 
 
 if __name__ == '__main__':

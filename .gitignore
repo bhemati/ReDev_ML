@@ -1,5 +1,6 @@
 __pycache__/
 .vscode/
+bgtasks/
 ml-repo/
 node_modules/
 p38-test/

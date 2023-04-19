@@ -87,8 +87,8 @@ def programmingScore(resume, jdss, progWords = None, skill_weightage = 40):
     # Updating Dictionary
     # results.update({n: constantValue * results[n] for n in results.keys()})
     #print("updated dict is ", results)
-    print("Required Skills: ", jdss)
-    print("Matched Skills: ", jdSkillMatched)
+    # print("Required Skills: ", jdss)
+    # print("Matched Skills: ", jdSkillMatched)
     pct_match = round(len(jdSkillMatched) / len(jdss) * 100, 0)
     # TotalScore = sum(results.values())
 
@@ -104,41 +104,7 @@ def programmingScore(resume, jdss, progWords = None, skill_weightage = 40):
 def NonTechnicalSkillScore(interests, jdss, progWords = None):
     skill_weightage = 0
     skill_threshold = 5
-    # fout = open("results.tex", "a")
 
-   # My Code 
-#     resumeCorpus = resume.split()
-#     """ Modify below """
-#     resumeCorpus = resumeCorpus + ResumeProgrammingSkillsMatchedWithJD
-#     resumeCorpus = [x.lower() for x in resumeCorpus if isinstance(x, str)]
-#     jdSkillMatched = [x.lower() for x in jdSkillMatched if isinstance(x, str)]
-#     #print(type(resumeCorpus))
-#     print("jd non-tech skills matched in lower case",jdSkillMatched)
-#     list1 = jdSkillMatched
-#     list2 = resumeCorpus
-#     results = {}
-#     for i in list1:
-#         if list2.count(i) > skill_threshold:
-#            results[i] = skill_threshold
-#         else:
-#            results[i] = list2.count(i)
-		
-#     #print("Relevant non-technical skills and their count in resume as per the JD are below")
-#     print("Dictionary from resume is ",results)
-#     #print(type(results))
-#    #end of code
-   
-#     constantValue = (individualSkillWeightage/skill_threshold)
-#     # Updating Dictionary
-#     results.update({n: constantValue * results[n] for n in results.keys()})
-#     print("updated dict is ", results)
-
-#     TotalScore = sum(results.values())
-#     print("Score is ", TotalScore)
-
-    # fout.close()
-
-    #progScore = min(programmingTotal/10.0, 1) * 5.0
 
     jdSkillMatched = []
     jdSkillMatched = jdss.intersection(interests)
@@ -147,7 +113,7 @@ def NonTechnicalSkillScore(interests, jdss, progWords = None):
         individualSkillWeightage = skill_weightage/jdSkillCount
     
     # print("Required Skills: ", jdss)
-    print("Matched Interests: ", jdSkillMatched)
+    # print("Matched Interests: ", jdSkillMatched)
     pct_match = round(len(jdSkillMatched) / len(jdss) * 100, 0)
     # TotalScore = sum(results.values())
 
