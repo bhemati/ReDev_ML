@@ -353,7 +353,7 @@ def show(user_id, username):
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', 5005, debug = True) 
+    app.run('0.0.0.0', 5001, debug = True) 
     # app.run('127.0.0.1' , 5001 , debug=True)
     # app.run('0.0.0.0' , 5001 , debug=True )
     # os.chdir('Upload-JD')
