@@ -3,7 +3,7 @@ import os
 import warnings
 # # from flask import (Flask,session,flash, redirect, render_template, request,
 #                 #    url_for, send_from_directory)
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 import core
 import search
 import pandas as pd
@@ -16,6 +16,7 @@ import string
 import openai
 from time import sleep
 import core2
+import backoff
 # warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 
 app = Flask(__name__)
@@ -31,20 +32,54 @@ def job_kw():
     try:
         with urllib.request.urlopen(input_data['job']) as url:
             data_jd = json.load(url)
-    
-        nlp = spacy.load("skillset")
-        search_st = data_jd['description'] + data_jd['responsibilities'] +data_jd['requirements']
+        openai.api_key = "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"
+        jd = data_jd.get('title') + ' ' + data_jd.get('description') + ' ' + data_jd.get('responsibilities') + ' ' + data_jd.get('requirements')
+        questions_skill = [
+            {"role": "system", "content": "You generate technical skills"},
+            {"role": "user", "content": "10 top main skill keywords for the following job posting: " + jd },
+        ]
+        @backoff.on_exception(backoff.expo, Exception, max_tries=10)
+        def completions_with_backoff(**kwargs):
+            return openai.ChatCompletion.create(**kwargs)
 
-        def create_skill_set(doc):
-            '''Create a set of the extracted skill entities of a doc'''
+    ## Call the completion with backoff
+        try:
+            res = completions_with_backoff(
+            model="gpt-3.5-turbo",
+            messages=questions_skill,
+            temperature=0,
+            max_tokens=256,
+            )
+        except Exception:
+            return "Completion API Failure"
+        b = res['choices'][0]['message']['content']
+        c = b.split('\n')
+        skills = []
+        for x in c:
+            idx = re.search(r'[a-z]+', x, flags=re.IGNORECASE)
+            if idx:
+                idx = idx.span()[0]
+                skill = x[idx:]
+                skill = re.sub("[\(\[].*?[\)\]]", "", skill)
+                skill = skill.strip()
+                skills.append(skill)
+        translator = re.compile('[%s]' % re.escape(string.punctuation))
+        res_ret = [translator.sub(' ', x.lower()) for x in skills]
+        res_ret = [re.sub(' +','_', x).strip() for x in res_ret]
+        return jsonify(res_ret)
+    #     nlp = spacy.load("skillset")
+    #     search_st = data_jd['description'] + data_jd['responsibilities'] +data_jd['requirements']
+
+    #     def create_skill_set(doc):
+    #         '''Create a set of the extracted skill entities of a doc'''
             
-            return set([ent.label_.lower().replace('-', '_')[6:] for ent in doc.ents if 'skill' in ent.label_.lower()])
+    #         return set([ent.label_.lower().replace('-', '_')[6:] for ent in doc.ents if 'skill' in ent.label_.lower()])
 
-        jd_skillsets = list(create_skill_set(nlp(search_st)))
+    #     jd_skillsets = list(create_skill_set(nlp(search_st)))
         
-        print("skillsets:",jd_skillsets)
-        return jsonify(jd_skillsets)
-    except Exception as e: return "Invalid input: " + e.__str__()
+    #     print("skillsets:",jd_skillsets)
+    #     return jsonify(jd_skillsets)
+    except Exception as e: return make_response("Invalid input: " + e.__str__(), 400)
 
 @app.route('/user/kw', methods=['POST'])
 def user_kw():
@@ -71,7 +106,7 @@ def user_kw():
         res_ret = [translator.sub(' ', x.lower()) for x in res_skillsets]
         res_ret = [re.sub(' +','_', x).strip() for x in res_ret]
         return jsonify(res_ret)
-    except Exception as e: return "Invalid input: " + e.__str__()
+    except Exception as e: return make_response("Invalid input: " + e.__str__(), 400)
 
 @app.route('/skill/suggestion', methods=['POST'])
 def skill_suggestion():
@@ -88,7 +123,7 @@ def skill_suggestion():
     ,'10 top main skill keywords for {}'.format(job_title)]
     try:
         openai.api_key = "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"
-    except Exception as e: return "API Problem: " + e.__str__()
+    except Exception as e: return make_response("API Problem: " + e.__str__(), 500)
     try:
         res = openai.Completion.create(
         model="text-davinci-003",
@@ -117,7 +152,7 @@ def skill_suggestion():
             return jsonify(skills)
         else:
             return 'Non IT-related job'
-    except Exception as e: return "API Problem: " + e.__str__()
+    except Exception as e: return make_response("API Problem: " + e.__str__(), 500)
 
 @app.route('/job/desc_gen', methods=['POST'])
 def jd_generator():
@@ -318,7 +353,7 @@ def show(user_id, username):
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', 5001, debug = True) 
+    app.run('0.0.0.0', 5005, debug = True) 
     # app.run('127.0.0.1' , 5001 , debug=True)
     # app.run('0.0.0.0' , 5001 , debug=True )
     # os.chdir('Upload-JD')
