@@ -90,8 +90,8 @@ def res(jobfile,skillset,jd_exp, user_ids):
     assessment_weightage = 15
 
     PROJECT_DIR = os.path.dirname(os.getcwd()) + '/'
-    skill_pattern_path = "skill_patterns.jsonl"
-    nlp = spacy.load("skillset")
+    skill_pattern_path = "/home/behrad/ReDev_ML-main/skill_patterns.jsonl"
+    nlp = spacy.load("/home/behrad/ReDev_ML-main/skillset")
     resume_text = jobfile+skillset
     def add_newruler_to_pipeline(skill_pattern_path):
         '''Reads in all created patterns from a JSONL file and adds it to the pipeline after PARSER and before NER'''

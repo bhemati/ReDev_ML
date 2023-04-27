@@ -90,7 +90,7 @@ def user_kw():
     try:
         with urllib.request.urlopen(input_data['applicant']) as url:
             data_res = json.load(url)
-        nlp = spacy.load("skillset")
+        nlp = spacy.load("/home/behrad/ReDev_ML-main/skillset")
         exp_list = [x["description"] for x in data_res["experiences"] if data_res["experiences"]]
         exp_text = " | ".join(exp_list)
         def create_skill_set(doc):
