@@ -63,9 +63,10 @@ def job_kw():
                 skill = re.sub("[\(\[].*?[\)\]]", "", skill)
                 skill = skill.strip()
                 skills.append(skill)
-        translator = re.compile('[%s]' % re.escape(string.punctuation))
-        res_ret = [translator.sub(' ', x.lower()) for x in skills]
-        res_ret = [re.sub(' +','_', x).strip() for x in res_ret]
+        # translator = re.compile('[%s]' % re.escape(string.punctuation))
+        # res_ret = [translator.sub(' ', x.lower()) for x in skills]
+        # res_ret = [re.sub(' +','_', x).strip() for x in res_ret]
+        res_ret = [x for x in skills]
         return jsonify(res_ret)
     #     nlp = spacy.load("skillset")
     #     search_st = data_jd['description'] + data_jd['responsibilities'] +data_jd['requirements']
@@ -102,9 +103,10 @@ def user_kw():
         edu_list = [x["field"] for x in data_res["educations"] if data_res["educations"]]
         skills = [x["title"] for x in data_res["skills"]]
         res_skillsets = skills + edu_list + exp_skillsets
-        translator = re.compile('[%s]' % re.escape(string.punctuation))
-        res_ret = [translator.sub(' ', x.lower()) for x in res_skillsets]
-        res_ret = [re.sub(' +','_', x).strip() for x in res_ret]
+        # translator = re.compile('[%s]' % re.escape(string.punctuation))
+        # res_ret = [translator.sub(' ', x.lower()) for x in res_skillsets]
+        # res_ret = [re.sub(' +','_', x).strip() for x in res_ret]
+        res_ret = [x for x in res_skillsets]
         return jsonify(res_ret)
     except Exception as e: return make_response("Invalid input: " + e.__str__(), 400)
 
