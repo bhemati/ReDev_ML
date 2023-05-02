@@ -17,10 +17,12 @@ import openai
 from time import sleep
 import core2
 import backoff
+
 # warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 
 app = Flask(__name__)
-
+absolutepath = os.path.dirname(__file__)
+skillset_path = absolutepath + "/skillset"
 # app.config.from_object(__name__) # load config from this file , flaskr.py
 
 @app.route('/job/kw', methods=['POST'])
@@ -91,7 +93,7 @@ def user_kw():
     try:
         with urllib.request.urlopen(input_data['applicant']) as url:
             data_res = json.load(url)
-        nlp = spacy.load("/home/behrad/ReDev_ML-main/skillset")
+        nlp = spacy.load(skillset_path)
         exp_list = [x["description"] for x in data_res["experiences"] if data_res["experiences"]]
         exp_text = " | ".join(exp_list)
         def create_skill_set(doc):

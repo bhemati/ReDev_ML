@@ -91,7 +91,10 @@ def res(jobfile,skillset,jd_exp, user_ids):
 
     PROJECT_DIR = os.path.dirname(os.getcwd()) + '/'
     skill_pattern_path = "/home/behrad/ReDev_ML-main/skill_patterns.jsonl"
-    nlp = spacy.load("/home/behrad/ReDev_ML-main/skillset")
+    absolutepath = os.path.dirname(__file__)
+    skillset_path = absolutepath + "/skillset"
+
+    nlp = spacy.load(skillset_path)
     resume_text = jobfile+skillset
     def add_newruler_to_pipeline(skill_pattern_path):
         '''Reads in all created patterns from a JSONL file and adds it to the pipeline after PARSER and before NER'''
@@ -219,10 +222,10 @@ def res(jobfile,skillset,jd_exp, user_ids):
                 Resume_email_vector.append(temp_email)
                 
             if jd_degree_required and edu_list:
-                edu_score = skills.eduScore(edu_list, jd_degree_required, skill_weightage=45)
+                edu_score = skills.eduScore(edu_list, jd_degree_required, skill_weightage=20)
                 # Resume_edu_vector.append(edu_score)
             elif edu_list:
-                edu_score = skills.eduScore(edu_list, skillset, skill_weightage=45)
+                edu_score = skills.eduScore(edu_list, skillset, skill_weightage=20)
                 # Resume_edu_vector.append(edu_score)
             else:
                 edu_score = 0
@@ -259,6 +262,7 @@ def res(jobfile,skillset,jd_exp, user_ids):
             +nontech_skill_score+exp_score \
             +round(ass_score*assessment_weightage,2) \
             +edu_score
+            final_rating = final_rating / 120 * 100
             res = ResultElement(round(similarity*jd_weightage,2), i['user']['id'],id,round(skill_score,2),
                             applicant_name,phone_no,user_email,
                             nontech_skill_score,exp_score,round(final_rating,2),
